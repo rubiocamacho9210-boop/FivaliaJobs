@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CLIENT
+  WORKER
+}
+
+enum PostType {
+  NEED
+  OFFER
+}
+
+enum PostStatus {
+  ACTIVE
+  CLOSED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  profile   Profile?
+  posts     Post[]
+  interests Interest[]
+}
+
+model Profile {
+  id        String  @id @default(cuid())
+  userId    String  @unique
+  bio       String?
+  category  String?
+  location  String?
+  contact   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Post {
+  id          String     @id @default(cuid())
+  userId      String
+  type        PostType
+  title       String
+  description String
+  category    String
+  status      PostStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User       @relation(fields: [userId], references: [id])
+  interests Interest[]
+}
+
+model Interest {
+  id         String   @id @default(cuid())
+  fromUserId String
+  postId     String
+
+  createdAt DateTime @default(now())
+
+  fromUser User @relation(fields: [fromUserId], references: [id])
+  post     Post @relation(fields: [postId], references: [id])
+
+  @@unique([fromUserId, postId])
+}
