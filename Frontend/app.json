@@ -7,11 +7,35 @@
     "scheme": "fivaliajobs",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": false,
+          "NSExceptionDomains": {
+            "localhost": {
+              "NSExceptionAllowsInsecureHTTPLoads": true,
+              "NSIncludesSubdomains": false
+            }
+          }
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
+      },
+      "networkSecurityConfig": {
+        "cleartextTrafficPermitted": false,
+        "trustAnchors": [
+          { "certificates": "system" }
+        ],
+        "domainConfig": [
+          {
+            "domain": "localhost",
+            "includeSubdomains": false,
+            "cleartextTrafficPermitted": true
+          }
+        ]
       }
     },
     "plugins": [

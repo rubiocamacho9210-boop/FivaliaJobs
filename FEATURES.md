@@ -124,12 +124,21 @@
 - [x] Almacenamiento seguro de tokens (expo-secure-store)
 - [x] Errores de API no exponen información del backend
 - [x] Manejo de errores centralizado
+- [x] HTTPS obligatorio en producción (error en arranque si URL es HTTP)
+- [x] Certificate pinning — ATS (iOS) prohíbe HTTP excepto localhost; Android `networkSecurityConfig` desactiva cleartext
+
+#### Backend
+- [x] Rate limiting global (10 req/s, 100 req/min por IP con `@nestjs/throttler`)
+- [x] Rate limiting estricto en auth (5 registros/10 min, 10 logins/15 min por IP)
+- [x] Account lockout tras 5 intentos fallidos (bloqueo 15 min)
+- [x] HTTPS obligatorio en producción (redirect 301 HTTP→HTTPS via `x-forwarded-proto`)
 
 #### Pendientes de Seguridad
-- [ ] Rate limiting (throttling)
-- [ ] Account lockout tras intentos fallidos
-- [ ] HTTPS obligatorio en producción
-- [ ] Certificate pinning
+*(Ninguna — todas implementadas)*
+
+#### Nota sobre certificate pinning nativo
+El pinning a nivel de hash de certificado (SHA-256) requiere módulos nativos y bare workflow.
+Para implementarlo completamente: `react-native-ssl-pinning` + EAS build con `expo-build-properties`.
 
 ---
 
