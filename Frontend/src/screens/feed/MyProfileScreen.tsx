@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppButton } from '@/components/AppButton';
@@ -38,6 +38,15 @@ export function MyProfileScreen() {
         data={postsQuery.data ?? []}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
+        refreshControl={
+          <RefreshControl
+            refreshing={profileQuery.isFetching || postsQuery.isFetching}
+            onRefresh={() => {
+              profileQuery.refetch();
+              postsQuery.refetch();
+            }}
+          />
+        }
         ListHeaderComponent={
           <>
             <Text style={styles.title}>Mi perfil</Text>

@@ -29,6 +29,7 @@ function MainTabsNavigator() {
           paddingBottom: Platform.select({ ios: 18, android: 8, default: 8 }),
           paddingTop: 8,
         },
+        tabBarHideOnKeyboard: true,
       }}
     >
       <Tab.Screen name="Feed" component={FeedScreen} options={{ title: 'Feed' }} />
@@ -39,9 +40,14 @@ function MainTabsNavigator() {
   );
 }
 
-export function AppNavigator() {
+type Props = {
+  forceProfileSetup?: boolean;
+};
+
+export function AppNavigator({ forceProfileSetup = false }: Props) {
   return (
     <Stack.Navigator
+      initialRouteName={forceProfileSetup ? 'ProfileSetup' : 'MainTabs'}
       screenOptions={{
         headerShadowVisible: false,
         headerStyle: { backgroundColor: theme.colors.background },
@@ -59,7 +65,11 @@ export function AppNavigator() {
       <Stack.Screen
         name="ProfileSetup"
         component={ProfileSetupScreen}
-        options={({ route }) => ({ title: route.params.mode === 'create' ? 'Configurar perfil' : 'Editar perfil' })}
+        initialParams={{ mode: 'create' }}
+        options={({ route }) => ({
+          title: route.params.mode === 'create' ? 'Configurar perfil' : 'Editar perfil',
+          gestureEnabled: route.params.mode === 'edit',
+        })}
       />
     </Stack.Navigator>
   );

@@ -6,7 +6,9 @@ import { AppInput } from '@/components/AppInput';
 import { AppButton } from '@/components/AppButton';
 import { theme } from '@/constants/theme';
 import { useLoginMutation, useRegisterMutation } from '@/hooks/useAuthMutations';
+import { useAuthStore } from '@/store/authStore';
 import { getApiErrorMessage } from '@/utils/error';
+import { backendLimits, isValidEmail } from '@/utils/validation';
 import { AuthStackParamList } from '@/navigation/types';
 import { UserRole } from '@/types/auth';
 
@@ -18,6 +20,7 @@ export function RegisterScreen({ navigation }: Props) {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<UserRole>('WORKER');
   const [formError, setFormError] = useState<string | null>(null);
+  const setNeedsProfileSetup = useAuthStore((state) => state.setNeedsProfileSetup);
 
   const registerMutation = useRegisterMutation();
   const loginMutation = useLoginMutation();
@@ -33,9 +36,22 @@ export function RegisterScreen({ navigation }: Props) {
       setFormError('Completa todos los campos.');
       return;
     }
+    if (!isValidEmail(email)) {
+      setFormError('Ingresa un correo valido.');
+      return;
+    }
+    if (name.trim().length > backendLimits.register.nameMax) {
+      setFormError(`El nombre debe tener maximo ${backendLimits.register.nameMax} caracteres.`);
+      return;
+    }
 
-    if (password.length < 8) {
-      setFormError('La contrasena debe tener al menos 8 caracteres.');
+    if (
+      password.length < backendLimits.register.passwordMin ||
+      password.length > backendLimits.register.passwordMax
+    ) {
+      setFormError(
+        `La contrasena debe tener entre ${backendLimits.register.passwordMin} y ${backendLimits.register.passwordMax} caracteres.`,
+      );
       return;
     }
 
@@ -51,6 +67,7 @@ export function RegisterScreen({ navigation }: Props) {
         email: normalizedEmail,
         password,
       });
+      setNeedsProfileSetup(true);
     } catch (error) {
       setFormError(getApiErrorMessage(error));
     }

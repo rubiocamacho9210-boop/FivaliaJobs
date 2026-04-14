@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { getMyProfile, getProfileByUserId, updateProfile } from '@/services/api/profileApi';
 import { queryKeys } from '@/hooks/queryKeys';
+import { authStore } from '@/store/authStore';
 import { UpdateProfileRequest } from '@/types/profile';
 import { ApiError } from '@/types/api';
 
@@ -28,6 +29,7 @@ export function useUpdateProfileMutation() {
     onSuccess: (profile) => {
       queryClient.setQueryData(queryKeys.myProfile, profile);
       queryClient.invalidateQueries({ queryKey: queryKeys.profileByUser(profile.userId) });
+      authStore.getState().setNeedsProfileSetup(false);
     },
   });
 }

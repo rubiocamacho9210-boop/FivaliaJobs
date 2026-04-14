@@ -7,6 +7,7 @@ import { theme } from '@/constants/theme';
 
 export function RootNavigator() {
   const token = useAuthStore((state) => state.token);
+  const needsProfileSetup = useAuthStore((state) => state.needsProfileSetup);
   const hasHydrated = useAuthStore((state) => state.hasHydrated);
 
   if (!hasHydrated) {
@@ -17,7 +18,7 @@ export function RootNavigator() {
     );
   }
 
-  return token ? <AppNavigator /> : <AuthNavigator />;
+  return token ? <AppNavigator forceProfileSetup={needsProfileSetup} /> : <AuthNavigator />;
 }
 
 const styles = StyleSheet.create({

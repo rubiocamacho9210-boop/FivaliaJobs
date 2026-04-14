@@ -6,8 +6,10 @@ import { AuthUser } from '@/types/auth';
 type AuthState = {
   token: string | null;
   user: AuthUser | null;
+  needsProfileSetup: boolean;
   hasHydrated: boolean;
   setSession: (token: string, user: AuthUser) => void;
+  setNeedsProfileSetup: (value: boolean) => void;
   clearSession: () => void;
   setHasHydrated: (value: boolean) => void;
 };
@@ -17,9 +19,11 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       token: null,
       user: null,
+      needsProfileSetup: false,
       hasHydrated: false,
       setSession: (token, user) => set({ token, user }),
-      clearSession: () => set({ token: null, user: null }),
+      setNeedsProfileSetup: (value) => set({ needsProfileSetup: value }),
+      clearSession: () => set({ token: null, user: null, needsProfileSetup: false }),
       setHasHydrated: (value) => set({ hasHydrated: value }),
     }),
     {
@@ -28,6 +32,7 @@ export const useAuthStore = create<AuthState>()(
       partialize: (state) => ({
         token: state.token,
         user: state.user,
+        needsProfileSetup: state.needsProfileSetup,
       }),
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true);

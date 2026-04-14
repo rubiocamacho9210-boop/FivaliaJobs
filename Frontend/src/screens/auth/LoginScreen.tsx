@@ -7,6 +7,7 @@ import { AppButton } from '@/components/AppButton';
 import { theme } from '@/constants/theme';
 import { useLoginMutation } from '@/hooks/useAuthMutations';
 import { getApiErrorMessage } from '@/utils/error';
+import { isValidEmail } from '@/utils/validation';
 import { AuthStackParamList } from '@/navigation/types';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
@@ -21,6 +22,10 @@ export function LoginScreen({ navigation }: Props) {
     setFormError(null);
     if (!email.trim() || !password.trim()) {
       setFormError('Completa correo y contrasena.');
+      return;
+    }
+    if (!isValidEmail(email)) {
+      setFormError('Ingresa un correo valido.');
       return;
     }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, StyleSheet, Text } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, Text } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { EmptyState } from '@/components/EmptyState';
 import { ErrorState } from '@/components/ErrorState';
@@ -40,6 +40,15 @@ export function PublicProfileScreen({ route, navigation }: Props) {
       <FlatList
         data={postsQuery.data ?? []}
         keyExtractor={(item) => item.id}
+        refreshControl={
+          <RefreshControl
+            refreshing={profileQuery.isFetching || postsQuery.isFetching}
+            onRefresh={() => {
+              profileQuery.refetch();
+              postsQuery.refetch();
+            }}
+          />
+        }
         ListHeaderComponent={
           <>
             <ProfileHeader profile={profileQuery.data} />

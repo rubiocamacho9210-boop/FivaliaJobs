@@ -9,6 +9,7 @@ import { theme } from '@/constants/theme';
 import { useMyProfileQuery, useUpdateProfileMutation } from '@/hooks/useProfile';
 import { AppStackParamList } from '@/navigation/types';
 import { getApiErrorMessage } from '@/utils/error';
+import { backendLimits } from '@/utils/validation';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'ProfileSetup'>;
 
@@ -33,6 +34,23 @@ export function ProfileSetupScreen({ route, navigation }: Props) {
 
   const onSubmit = async () => {
     setError(null);
+    if (bio.trim().length > backendLimits.profile.bioMax) {
+      setError(`La bio admite maximo ${backendLimits.profile.bioMax} caracteres.`);
+      return;
+    }
+    if (category.trim().length > backendLimits.profile.categoryMax) {
+      setError(`La categoria admite maximo ${backendLimits.profile.categoryMax} caracteres.`);
+      return;
+    }
+    if (location.trim().length > backendLimits.profile.locationMax) {
+      setError(`La ubicacion admite maximo ${backendLimits.profile.locationMax} caracteres.`);
+      return;
+    }
+    if (contact.trim().length > backendLimits.profile.contactMax) {
+      setError(`El contacto admite maximo ${backendLimits.profile.contactMax} caracteres.`);
+      return;
+    }
+
     try {
       await updateMutation.mutateAsync({
         bio: bio.trim() || undefined,
@@ -40,6 +58,10 @@ export function ProfileSetupScreen({ route, navigation }: Props) {
         location: location.trim() || undefined,
         contact: contact.trim() || undefined,
       });
+      if (mode === 'create') {
+        navigation.replace('MainTabs', { screen: 'Feed' });
+        return;
+      }
       navigation.goBack();
     } catch (updateError) {
       setError(getApiErrorMessage(updateError));

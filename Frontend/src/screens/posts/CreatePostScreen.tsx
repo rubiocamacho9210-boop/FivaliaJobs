@@ -10,6 +10,7 @@ import { useCreatePostMutation } from '@/hooks/usePosts';
 import { AppTabParamList } from '@/navigation/types';
 import { PostType } from '@/types/post';
 import { getApiErrorMessage } from '@/utils/error';
+import { backendLimits, hasLengthBetween } from '@/utils/validation';
 
 export function CreatePostScreen() {
   const navigation = useNavigation<BottomTabNavigationProp<AppTabParamList>>();
@@ -24,6 +25,28 @@ export function CreatePostScreen() {
     setError(null);
     if (!title.trim() || !description.trim() || !category.trim()) {
       setError('Completa tipo, titulo, descripcion y categoria.');
+      return;
+    }
+    if (!hasLengthBetween(title, backendLimits.post.titleMin, backendLimits.post.titleMax)) {
+      setError(
+        `El titulo debe tener entre ${backendLimits.post.titleMin} y ${backendLimits.post.titleMax} caracteres.`,
+      );
+      return;
+    }
+    if (
+      !hasLengthBetween(
+        description,
+        backendLimits.post.descriptionMin,
+        backendLimits.post.descriptionMax,
+      )
+    ) {
+      setError(
+        `La descripcion debe tener entre ${backendLimits.post.descriptionMin} y ${backendLimits.post.descriptionMax} caracteres.`,
+      );
+      return;
+    }
+    if (category.trim().length > backendLimits.post.categoryMax) {
+      setError(`La categoria permite maximo ${backendLimits.post.categoryMax} caracteres.`);
       return;
     }
 

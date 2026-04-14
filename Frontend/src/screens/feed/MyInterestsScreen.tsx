@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, StyleSheet, Text } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { EmptyState } from '@/components/EmptyState';
@@ -37,6 +37,12 @@ export function MyInterestsScreen() {
           data={interestsQuery.data ?? []}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.list}
+          refreshControl={
+            <RefreshControl
+              refreshing={interestsQuery.isFetching}
+              onRefresh={interestsQuery.refetch}
+            />
+          }
           renderItem={({ item }) => (
             <PostCard
               post={{
