@@ -12,6 +12,7 @@ import { getApiErrorMessage } from '@/utils/error';
 import { backendLimits, isValidEmail } from '@/utils/validation';
 import { AuthStackParamList } from '@/navigation/types';
 import { UserRole } from '@/types/auth';
+import { useI18n } from '@/i18n';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Register'>;
 
@@ -23,13 +24,13 @@ export function RegisterScreen({ navigation }: Props) {
   const [role, setRole] = useState<UserRole>('WORKER');
   const [formError, setFormError] = useState<string | null>(null);
   const setNeedsProfileSetup = useAuthStore((state) => state.setNeedsProfileSetup);
-
   const registerMutation = useRegisterMutation();
   const loginMutation = useLoginMutation();
+  const { t } = useI18n();
 
   const submitLabel = useMemo(
-    () => (role === 'WORKER' ? 'Crear cuenta como trabajador' : 'Crear cuenta como cliente'),
-    [role],
+    () => (role === 'WORKER' ? t.register.workerAccount : t.register.clientAccount),
+    [role, t],
   );
 
   const isAdult = (date: Date): boolean => {
@@ -45,23 +46,23 @@ export function RegisterScreen({ navigation }: Props) {
   const onSubmit = async () => {
     setFormError(null);
     if (!name.trim() || !email.trim() || !password.trim()) {
-      setFormError('Completa todos los campos.');
+      setFormError(t.common.completeAllFields);
       return;
     }
     if (!birthDate) {
-      setFormError('Ingresa tu fecha de nacimiento.');
+      setFormError(t.register.selectBirthDate);
       return;
     }
     if (!isAdult(birthDate)) {
-      setFormError('Debes ser mayor de 18 años para registrarte.');
+      setFormError(t.register.mustBeAdult);
       return;
     }
     if (!isValidEmail(email)) {
-      setFormError('Ingresa un correo valido.');
+      setFormError(t.common.invalidEmail);
       return;
     }
     if (name.trim().length > backendLimits.register.nameMax) {
-      setFormError(`El nombre debe tener maximo ${backendLimits.register.nameMax} caracteres.`);
+      setFormError(t.common.nameTooLong.replace('{{max}}', String(backendLimits.register.nameMax)));
       return;
     }
 
@@ -70,7 +71,9 @@ export function RegisterScreen({ navigation }: Props) {
       password.length > backendLimits.register.passwordMax
     ) {
       setFormError(
-        `La contraseña debe tener entre ${backendLimits.register.passwordMin} y ${backendLimits.register.passwordMax} caracteres.`,
+        t.common.passwordLength
+          .replace('{{min}}', String(backendLimits.register.passwordMin))
+          .replace('{{max}}', String(backendLimits.register.passwordMax)),
       );
       return;
     }
@@ -97,50 +100,50 @@ export function RegisterScreen({ navigation }: Props) {
   return (
     <ScreenContainer scrollable>
       <View style={styles.header}>
-        <Text style={styles.title}>Crear cuenta</Text>
-        <Text style={styles.subtitle}>Empieza a publicar o encontrar oportunidades.</Text>
+        <Text style={styles.title}>{t.register.title}</Text>
+        <Text style={styles.subtitle}>{t.register.subtitle}</Text>
       </View>
 
       <AppInput
-        label="Nombre"
+        label={t.common.name}
         value={name}
         onChangeText={setName}
-        placeholder="Tu nombre"
+        placeholder={t.register.namePlaceholder}
         autoCapitalize="words"
       />
       <AppInput
-        label="Correo"
+        label={t.common.email}
         value={email}
         onChangeText={setEmail}
-        placeholder="tu@email.com"
+        placeholder={t.auth.emailPlaceholder}
         keyboardType="email-address"
         autoComplete="email"
       />
       <AppInput
-        label="Contraseña"
+        label={t.common.password}
         value={password}
         onChangeText={setPassword}
-        placeholder="Minimo 8 caracteres"
+        placeholder={t.auth.minChars}
         secureTextEntry
         autoComplete="password-new"
       />
       <AppDatePicker
-        label="Fecha de nacimiento"
+        label={t.register.birthDate}
         value={birthDate}
         onChange={setBirthDate}
         maximumDate={new Date()}
       />
 
-      <Text style={styles.roleLabel}>Tipo de cuenta</Text>
+      <Text style={styles.roleLabel}>{t.register.accountType}</Text>
       <View style={styles.roleActions}>
         <AppButton
-          label="Trabajador"
+          label={t.register.worker}
           variant={role === 'WORKER' ? 'primary' : 'secondary'}
           onPress={() => setRole('WORKER')}
           style={styles.roleButton}
         />
         <AppButton
-          label="Cliente"
+          label={t.register.client}
           variant={role === 'CLIENT' ? 'primary' : 'secondary'}
           onPress={() => setRole('CLIENT')}
           style={styles.roleButton}
@@ -156,8 +159,8 @@ export function RegisterScreen({ navigation }: Props) {
       />
 
       <View style={styles.footer}>
-        <Text style={styles.footerText}>Ya tienes cuenta?</Text>
-        <AppButton label="Ir a login" variant="ghost" onPress={() => navigation.goBack()} />
+        <Text style={styles.footerText}>{t.register.alreadyHaveAccount}</Text>
+        <AppButton label={t.auth.goToLogin} variant="ghost" onPress={() => navigation.goBack()} />
       </View>
     </ScreenContainer>
   );

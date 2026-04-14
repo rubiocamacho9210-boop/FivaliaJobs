@@ -10,6 +10,7 @@ import { useMyProfileQuery, useUpdateProfileMutation } from '@/hooks/useProfile'
 import { AppStackParamList } from '@/navigation/types';
 import { getApiErrorMessage } from '@/utils/error';
 import { backendLimits } from '@/utils/validation';
+import { useI18n } from '@/i18n';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'ProfileSetup'>;
 
@@ -17,6 +18,7 @@ export function ProfileSetupScreen({ route, navigation }: Props) {
   const mode = route.params.mode;
   const profileQuery = useMyProfileQuery();
   const updateMutation = useUpdateProfileMutation();
+  const { t } = useI18n();
 
   const [bio, setBio] = useState('');
   const [category, setCategory] = useState('');
@@ -35,19 +37,19 @@ export function ProfileSetupScreen({ route, navigation }: Props) {
   const onSubmit = async () => {
     setError(null);
     if (bio.trim().length > backendLimits.profile.bioMax) {
-      setError(`La bio admite maximo ${backendLimits.profile.bioMax} caracteres.`);
+      setError(t.profile.bioTooLong.replace('{{max}}', String(backendLimits.profile.bioMax)));
       return;
     }
     if (category.trim().length > backendLimits.profile.categoryMax) {
-      setError(`La categoria admite maximo ${backendLimits.profile.categoryMax} caracteres.`);
+      setError(t.profile.categoryTooLong.replace('{{max}}', String(backendLimits.profile.categoryMax)));
       return;
     }
     if (location.trim().length > backendLimits.profile.locationMax) {
-      setError(`La ubicacion admite maximo ${backendLimits.profile.locationMax} caracteres.`);
+      setError(t.profile.locationTooLong.replace('{{max}}', String(backendLimits.profile.locationMax)));
       return;
     }
     if (contact.trim().length > backendLimits.profile.contactMax) {
-      setError(`El contacto admite maximo ${backendLimits.profile.contactMax} caracteres.`);
+      setError(t.profile.contactTooLong.replace('{{max}}', String(backendLimits.profile.contactMax)));
       return;
     }
 
@@ -79,31 +81,43 @@ export function ProfileSetupScreen({ route, navigation }: Props) {
   return (
     <ScreenContainer scrollable>
       <View style={styles.header}>
-        <Text style={styles.title}>{mode === 'create' ? 'Configura tu perfil' : 'Editar perfil'}</Text>
-        <Text style={styles.subtitle}>Completa los datos esenciales para mejorar tu visibilidad.</Text>
+        <Text style={styles.title}>
+          {mode === 'create' ? t.profile.setupProfile : t.profile.editProfile}
+        </Text>
+        <Text style={styles.subtitle}>{t.profile.setupDescription}</Text>
       </View>
 
       <AppInput
-        label="Bio"
+        label={t.profile.bio}
         value={bio}
         onChangeText={setBio}
-        placeholder="Cuéntanos sobre ti"
+        placeholder={t.profile.bioPlaceholder}
         multiline
         style={styles.multiline}
       />
       <AppInput
-        label="Categoria"
+        label={t.profile.category}
         value={category}
         onChangeText={setCategory}
-        placeholder="Ej. Programacion, Marketing"
+        placeholder={t.profile.categoryPlaceholder}
       />
-      <AppInput label="Ubicacion" value={location} onChangeText={setLocation} placeholder="Ciudad o remoto" />
-      <AppInput label="Contacto" value={contact} onChangeText={setContact} placeholder="Correo o telefono" />
+      <AppInput
+        label={t.profile.location}
+        value={location}
+        onChangeText={setLocation}
+        placeholder={t.profile.locationPlaceholder}
+      />
+      <AppInput
+        label={t.profile.contact}
+        value={contact}
+        onChangeText={setContact}
+        placeholder={t.profile.contactPlaceholder}
+      />
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <AppButton
-        label={mode === 'create' ? 'Guardar perfil' : 'Actualizar perfil'}
+        label={mode === 'create' ? t.profile.saveProfile : t.profile.updateProfile}
         onPress={onSubmit}
         loading={updateMutation.isPending}
       />

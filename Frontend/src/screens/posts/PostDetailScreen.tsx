@@ -12,6 +12,7 @@ import { usePostDetailQuery } from '@/hooks/usePosts';
 import { AppStackParamList } from '@/navigation/types';
 import { useAuthStore } from '@/store/authStore';
 import { getApiErrorMessage } from '@/utils/error';
+import { useI18n } from '@/i18n';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'PostDetail'>;
 
@@ -20,6 +21,7 @@ export function PostDetailScreen({ route, navigation }: Props) {
   const user = useAuthStore((state) => state.user);
   const { data: post, isLoading, isError, refetch } = usePostDetailQuery(postId);
   const createInterestMutation = useCreateInterestMutation();
+  const { t } = useI18n();
   const [interestError, setInterestError] = useState<string | null>(null);
 
   const onPressInterest = async () => {
@@ -43,7 +45,7 @@ export function PostDetailScreen({ route, navigation }: Props) {
   if (isError || !post) {
     return (
       <ScreenContainer>
-        <ErrorState message="No pudimos cargar esta publicacion." onRetry={refetch} />
+        <ErrorState message={t.posts.couldNotLoadPost} onRetry={refetch} />
       </ScreenContainer>
     );
   }
@@ -66,29 +68,36 @@ export function PostDetailScreen({ route, navigation }: Props) {
       {interestError ? <Text style={styles.error}>{interestError}</Text> : null}
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Descripcion completa</Text>
+        <Text style={styles.sectionTitle}>{t.posts.fullDescription}</Text>
         <Text style={styles.sectionBody}>{post.description}</Text>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Categoria</Text>
+        <Text style={styles.sectionTitle}>{t.profile.category}</Text>
         <Text style={styles.sectionBody}>{post.category}</Text>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Tipo</Text>
-        <Text style={styles.sectionBody}>{post.type === 'NEED' ? 'Necesita ayuda' : 'Ofrece servicio'}</Text>
+        <Text style={styles.sectionTitle}>{t.posts.type}</Text>
+        <Text style={styles.sectionBody}>
+          {post.type === 'NEED' ? t.posts.needsHelp : t.posts.offersService}
+        </Text>
       </View>
 
       {post.user?.profile?.contact ? (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Contacto</Text>
+          <Text style={styles.sectionTitle}>{t.profile.contact}</Text>
           <Text style={styles.sectionBody}>{post.user.profile.contact}</Text>
         </View>
       ) : null}
 
       {post.userId === user?.id ? (
-        <AppButton label="Esta es tu publicacion" onPress={() => {}} disabled variant="secondary" />
+        <AppButton
+          label={t.posts.thisIsYourPublication}
+          onPress={() => {}}
+          disabled
+          variant="secondary"
+        />
       ) : null}
     </ScreenContainer>
   );

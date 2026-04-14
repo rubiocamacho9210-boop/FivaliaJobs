@@ -9,6 +9,7 @@ import { useLoginMutation } from '@/hooks/useAuthMutations';
 import { getApiErrorMessage } from '@/utils/error';
 import { isValidEmail } from '@/utils/validation';
 import { AuthStackParamList } from '@/navigation/types';
+import { useI18n } from '@/i18n';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
@@ -17,15 +18,16 @@ export function LoginScreen({ navigation }: Props) {
   const [password, setPassword] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
   const loginMutation = useLoginMutation();
+  const { t } = useI18n();
 
   const onSubmit = async () => {
     setFormError(null);
     if (!email.trim() || !password.trim()) {
-      setFormError('Completa correo y contraseña.');
+      setFormError(t.auth.completeFields);
       return;
     }
     if (!isValidEmail(email)) {
-      setFormError('Ingresa un correo valido.');
+      setFormError(t.common.invalidEmail);
       return;
     }
 
@@ -42,35 +44,35 @@ export function LoginScreen({ navigation }: Props) {
   return (
     <ScreenContainer scrollable>
       <View style={styles.header}>
-        <Text style={styles.title}>Bienvenido a FivaliaJobs</Text>
-        <Text style={styles.subtitle}>Encuentra trabajo o talento rapido.</Text>
+        <Text style={styles.title}>{t.auth.welcome}</Text>
+        <Text style={styles.subtitle}>{t.auth.welcomeSubtitle}</Text>
       </View>
 
       <AppInput
-        label="Correo"
+        label={t.common.email}
         value={email}
         onChangeText={setEmail}
-        placeholder="tu@email.com"
+        placeholder={t.auth.emailPlaceholder}
         keyboardType="email-address"
         autoComplete="email"
       />
       <AppInput
-        label="Contraseña"
+        label={t.common.password}
         value={password}
         onChangeText={setPassword}
-        placeholder="********"
+        placeholder={t.auth.passwordPlaceholder}
         secureTextEntry
         autoComplete="password"
       />
 
       {formError ? <Text style={styles.error}>{formError}</Text> : null}
 
-      <AppButton label="Entrar" onPress={onSubmit} loading={loginMutation.isPending} />
+      <AppButton label={t.auth.enter} onPress={onSubmit} loading={loginMutation.isPending} />
 
       <View style={styles.footer}>
-        <Text style={styles.footerText}>No tienes cuenta?</Text>
+        <Text style={styles.footerText}>{t.auth.dontHaveAccount}</Text>
         <AppButton
-          label="Crear cuenta"
+          label={t.auth.createAccount}
           variant="ghost"
           onPress={() => navigation.navigate('Register')}
         />
