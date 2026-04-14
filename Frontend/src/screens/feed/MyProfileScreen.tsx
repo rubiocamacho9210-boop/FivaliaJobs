@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { Alert, FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppButton } from '@/components/AppButton';
@@ -21,6 +21,13 @@ export function MyProfileScreen() {
   const profileQuery = useMyProfileQuery();
   const postsQuery = usePostsByUserQuery(user?.id ?? '');
   const clearSession = useAuthStore((state) => state.clearSession);
+
+  const onPressLogout = () => {
+    Alert.alert('Cerrar sesión', '¿Quieres salir de tu cuenta?', [
+      { text: 'Cancelar', style: 'cancel' },
+      { text: 'Cerrar sesión', style: 'destructive', onPress: clearSession },
+    ]);
+  };
 
   if (profileQuery.isLoading) {
     return (
@@ -72,12 +79,20 @@ export function MyProfileScreen() {
             ) : null}
 
             {profileQuery.data ? (
-              <AppButton
-                label="Editar perfil"
-                variant="secondary"
-                onPress={() => navigation.navigate('ProfileSetup', { mode: 'edit' })}
-                style={styles.editButton}
-              />
+              <View style={styles.profileActions}>
+                <AppButton
+                  label="Editar perfil"
+                  variant="secondary"
+                  onPress={() => navigation.navigate('ProfileSetup', { mode: 'edit' })}
+                  style={styles.actionButton}
+                />
+                <AppButton
+                  label="Cerrar sesión"
+                  variant="ghost"
+                  onPress={onPressLogout}
+                  style={styles.actionButton}
+                />
+              </View>
             ) : null}
 
             <Text style={styles.sectionTitle}>Mis publicaciones</Text>
@@ -100,11 +115,6 @@ export function MyProfileScreen() {
             hideInterestButton
           />
         )}
-        ListFooterComponent={
-          <View style={styles.logoutWrap}>
-            <AppButton label="Cerrar sesion" variant="ghost" onPress={clearSession} />
-          </View>
-        }
       />
     </ScreenContainer>
   );
@@ -133,11 +143,11 @@ const styles = StyleSheet.create({
   blockAction: {
     marginTop: theme.spacing.sm,
   },
-  editButton: {
+  profileActions: {
+    gap: theme.spacing.sm,
     marginBottom: theme.spacing.md,
   },
-  logoutWrap: {
-    alignItems: 'center',
-    marginTop: theme.spacing.md,
+  actionButton: {
+    marginBottom: theme.spacing.md,
   },
 });
