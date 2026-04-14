@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { AppInput } from '@/components/AppInput';
+import { AppDatePicker } from '@/components/AppDatePicker';
 import { AppButton } from '@/components/AppButton';
 import { theme } from '@/constants/theme';
 import { useLoginMutation, useRegisterMutation } from '@/hooks/useAuthMutations';
@@ -18,6 +19,7 @@ export function RegisterScreen({ navigation }: Props) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [birthDate, setBirthDate] = useState<Date | null>(null);
   const [role, setRole] = useState<UserRole>('WORKER');
   const [formError, setFormError] = useState<string | null>(null);
   const setNeedsProfileSetup = useAuthStore((state) => state.setNeedsProfileSetup);
@@ -30,10 +32,28 @@ export function RegisterScreen({ navigation }: Props) {
     [role],
   );
 
+  const isAdult = (date: Date): boolean => {
+    const today = new Date();
+    const age = today.getFullYear() - date.getFullYear();
+    const monthDiff = today.getMonth() - date.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < date.getDate())) {
+      return age - 1 >= 18;
+    }
+    return age >= 18;
+  };
+
   const onSubmit = async () => {
     setFormError(null);
     if (!name.trim() || !email.trim() || !password.trim()) {
       setFormError('Completa todos los campos.');
+      return;
+    }
+    if (!birthDate) {
+      setFormError('Ingresa tu fecha de nacimiento.');
+      return;
+    }
+    if (!isAdult(birthDate)) {
+      setFormError('Debes ser mayor de 18 años para registrarte.');
       return;
     }
     if (!isValidEmail(email)) {
@@ -62,6 +82,7 @@ export function RegisterScreen({ navigation }: Props) {
         email: normalizedEmail,
         password,
         role,
+        birthDate: birthDate.toISOString(),
       });
       await loginMutation.mutateAsync({
         email: normalizedEmail,
@@ -102,6 +123,12 @@ export function RegisterScreen({ navigation }: Props) {
         placeholder="Minimo 8 caracteres"
         secureTextEntry
         autoComplete="password-new"
+      />
+      <AppDatePicker
+        label="Fecha de nacimiento"
+        value={birthDate}
+        onChange={setBirthDate}
+        maximumDate={new Date()}
       />
 
       <Text style={styles.roleLabel}>Tipo de cuenta</Text>
