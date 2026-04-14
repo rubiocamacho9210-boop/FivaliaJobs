@@ -71,6 +71,11 @@ export const es = {
     userNoPublications: 'Este usuario aún no tiene publicaciones visibles.',
     couldNotLoadProfile: 'No pudimos cargar este perfil.',
     couldNotLoadPublications: 'No pudimos cargar publicaciones.',
+    uploadPhoto: 'Subir foto',
+    choosePhotoOption: 'Elige cómo agregar una foto',
+    takePhoto: 'Tomar foto',
+    chooseFromGallery: 'Elegir de galería',
+    rating: 'Calificación',
   },
   posts: {
     need: 'Necesito',

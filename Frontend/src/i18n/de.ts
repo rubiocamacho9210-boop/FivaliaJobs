@@ -71,6 +71,11 @@ export const de = {
     userNoPublications: 'Dieser Benutzer hat noch keine sichtbaren Veröffentlichungen.',
     couldNotLoadProfile: 'Dieses Profil konnte nicht geladen werden.',
     couldNotLoadPublications: 'Die Veröffentlichungen konnten nicht geladen werden.',
+    uploadPhoto: 'Foto hochladen',
+    choosePhotoOption: 'Wählen Sie, wie Sie ein Foto hinzufügen möchten',
+    takePhoto: 'Foto aufnehmen',
+    chooseFromGallery: 'Aus Galerie wählen',
+    rating: 'Bewertung',
   },
   posts: {
     need: 'Ich brauche',

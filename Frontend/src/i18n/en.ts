@@ -71,6 +71,11 @@ export const en = {
     userNoPublications: 'This user has no visible publications.',
     couldNotLoadProfile: 'We could not load this profile.',
     couldNotLoadPublications: 'We could not load publications.',
+    uploadPhoto: 'Upload photo',
+    choosePhotoOption: 'Choose how to add a photo',
+    takePhoto: 'Take photo',
+    chooseFromGallery: 'Choose from gallery',
+    rating: 'Rating',
   },
   posts: {
     need: 'Need',

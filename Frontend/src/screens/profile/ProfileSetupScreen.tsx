@@ -4,13 +4,14 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AppButton } from '@/components/AppButton';
 import { AppInput } from '@/components/AppInput';
 import { LoadingState } from '@/components/LoadingState';
+import { PhotoUpload } from '@/components/PhotoUpload';
 import { ScreenContainer } from '@/components/ScreenContainer';
-import { theme } from '@/constants/theme';
 import { useMyProfileQuery, useUpdateProfileMutation } from '@/hooks/useProfile';
 import { AppStackParamList } from '@/navigation/types';
 import { getApiErrorMessage } from '@/utils/error';
 import { backendLimits } from '@/utils/validation';
 import { useI18n } from '@/i18n';
+import { useTheme } from '@/context/ThemeContext';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'ProfileSetup'>;
 
@@ -19,11 +20,13 @@ export function ProfileSetupScreen({ route, navigation }: Props) {
   const profileQuery = useMyProfileQuery();
   const updateMutation = useUpdateProfileMutation();
   const { t } = useI18n();
+  const { colors, spacing } = useTheme();
 
   const [bio, setBio] = useState('');
   const [category, setCategory] = useState('');
   const [location, setLocation] = useState('');
   const [contact, setContact] = useState('');
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -32,6 +35,7 @@ export function ProfileSetupScreen({ route, navigation }: Props) {
     setCategory(profileQuery.data.category ?? '');
     setLocation(profileQuery.data.location ?? '');
     setContact(profileQuery.data.contact ?? '');
+    setPhotoUrl(profileQuery.data.photoUrl ?? null);
   }, [profileQuery.data]);
 
   const onSubmit = async () => {
@@ -59,6 +63,7 @@ export function ProfileSetupScreen({ route, navigation }: Props) {
         category: category.trim() || undefined,
         location: location.trim() || undefined,
         contact: contact.trim() || undefined,
+        photoUrl: photoUrl ?? undefined,
       });
       if (mode === 'create') {
         navigation.replace('MainTabs', { screen: 'Feed' });
@@ -80,12 +85,16 @@ export function ProfileSetupScreen({ route, navigation }: Props) {
 
   return (
     <ScreenContainer scrollable>
-      <View style={styles.header}>
-        <Text style={styles.title}>
+      <View style={[styles.header, { marginBottom: spacing.lg }]}>
+        <Text style={[styles.title, { color: colors.textPrimary, fontSize: 24, fontWeight: '700' }]}>
           {mode === 'create' ? t.profile.setupProfile : t.profile.editProfile}
         </Text>
-        <Text style={styles.subtitle}>{t.profile.setupDescription}</Text>
+        <Text style={[styles.subtitle, { color: colors.textSecondary, marginTop: 4 }]}>
+          {t.profile.setupDescription}
+        </Text>
       </View>
+
+      <PhotoUpload value={photoUrl} onChange={setPhotoUrl} />
 
       <AppInput
         label={t.profile.bio}
@@ -114,7 +123,7 @@ export function ProfileSetupScreen({ route, navigation }: Props) {
         placeholder={t.profile.contactPlaceholder}
       />
 
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <Text style={[styles.error, { color: colors.danger, marginBottom: spacing.md }]}>{error}</Text> : null}
 
       <AppButton
         label={mode === 'create' ? t.profile.saveProfile : t.profile.updateProfile}
@@ -126,25 +135,13 @@ export function ProfileSetupScreen({ route, navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    marginBottom: theme.spacing.lg,
-  },
-  title: {
-    color: theme.colors.textPrimary,
-    fontSize: theme.text.heading,
-    fontWeight: '700',
-  },
-  subtitle: {
-    color: theme.colors.textSecondary,
-    marginTop: 4,
-  },
+  header: {},
+  title: {},
+  subtitle: {},
   multiline: {
     minHeight: 110,
     textAlignVertical: 'top',
-    paddingTop: theme.spacing.sm,
+    paddingTop: 12,
   },
-  error: {
-    color: theme.colors.danger,
-    marginBottom: theme.spacing.md,
-  },
+  error: {},
 });
