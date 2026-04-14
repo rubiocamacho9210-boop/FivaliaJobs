@@ -3,19 +3,32 @@ import React, { useMemo } from 'react';
 import { NavigationContainer, Theme } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RootNavigator } from '@/navigation/RootNavigator';
-import { theme } from '@/constants/theme';
+import { ThemeProvider, useTheme } from '@/context/ThemeContext';
 
-const navTheme: Theme = {
-  dark: false,
-  colors: {
-    primary: theme.colors.accent,
-    background: theme.colors.background,
-    card: theme.colors.surface,
-    text: theme.colors.textPrimary,
-    border: theme.colors.border,
-    notification: theme.colors.accent,
-  },
-};
+function AppNavigator() {
+  const { colors, isDark } = useTheme();
+
+  const navTheme: Theme = useMemo(
+    () => ({
+      dark: isDark,
+      colors: {
+        primary: colors.accent,
+        background: colors.background,
+        card: colors.surface,
+        text: colors.textPrimary,
+        border: colors.border,
+        notification: colors.accent,
+      },
+    }),
+    [colors, isDark],
+  );
+
+  return (
+    <NavigationContainer theme={navTheme}>
+      <RootNavigator />
+    </NavigationContainer>
+  );
+}
 
 export default function App() {
   const queryClient = useMemo(
@@ -33,9 +46,9 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <NavigationContainer theme={navTheme}>
-        <RootNavigator />
-      </NavigationContainer>
+      <ThemeProvider>
+        <AppNavigator />
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

@@ -13,7 +13,8 @@ import { usePostsByUserQuery } from '@/hooks/usePosts';
 import { isProfileNotFoundError, useMyProfileQuery } from '@/hooks/useProfile';
 import { AppStackParamList } from '@/navigation/types';
 import { useAuthStore } from '@/store/authStore';
-import { useI18n, Language } from '@/i18n';
+import { useI18n, Language, ThemeMode } from '@/i18n';
+import { useTheme } from '@/context/ThemeContext';
 import { theme } from '@/constants/theme';
 
 export function MyProfileScreen() {
@@ -22,14 +23,27 @@ export function MyProfileScreen() {
   const profileQuery = useMyProfileQuery();
   const postsQuery = usePostsByUserQuery(user?.id ?? '');
   const clearSession = useAuthStore((state) => state.clearSession);
-  const { t, language, setLanguage } = useI18n();
+  const { t, language, themeMode, setLanguage, setThemeMode } = useI18n();
+  const { spacing, radius, colors, text } = useTheme();
   const [showLangPicker, setShowLangPicker] = useState(false);
+  const [showThemePicker, setShowThemePicker] = useState(false);
 
   const onPressLogout = () => {
     Alert.alert(t.profile.logoutTitle, t.profile.logoutConfirm, [
       { text: t.common.cancel, style: 'cancel' },
       { text: t.profile.logout, style: 'destructive', onPress: clearSession },
     ]);
+  };
+
+  const getThemeLabel = (mode: ThemeMode) => {
+    switch (mode) {
+      case 'light':
+        return t.settings.light;
+      case 'dark':
+        return t.settings.dark;
+      case 'system':
+        return t.settings.system;
+    }
   };
 
   if (profileQuery.isLoading) {
@@ -84,37 +98,61 @@ export function MyProfileScreen() {
             {profileQuery.data ? (
               <>
                 <View style={styles.settingsSection}>
+                  <Text style={styles.settingsTitle}>{t.settings.theme}</Text>
+                  <Pressable
+                    style={styles.selector}
+                    onPress={() => setShowThemePicker(!showThemePicker)}
+                  >
+                    <Text style={styles.selectorText}>{getThemeLabel(themeMode)}</Text>
+                    <Text style={styles.selectorArrow}>{showThemePicker ? '▲' : '▼'}</Text>
+                  </Pressable>
+                  {showThemePicker ? (
+                    <View style={styles.options}>
+                      {(['light', 'dark', 'system'] as ThemeMode[]).map((mode) => (
+                        <Pressable
+                          key={mode}
+                          style={[styles.option, themeMode === mode && styles.optionActive]}
+                          onPress={() => {
+                            setThemeMode(mode);
+                            setShowThemePicker(false);
+                          }}
+                        >
+                          <Text style={[styles.optionText, themeMode === mode && styles.optionTextActive]}>
+                            {getThemeLabel(mode)}
+                          </Text>
+                        </Pressable>
+                      ))}
+                    </View>
+                  ) : null}
+                </View>
+
+                <View style={styles.settingsSection}>
                   <Text style={styles.settingsTitle}>{t.settings.language}</Text>
-                  <Pressable style={styles.langSelector} onPress={() => setShowLangPicker(!showLangPicker)}>
-                    <Text style={styles.langSelectorText}>
+                  <Pressable
+                    style={styles.selector}
+                    onPress={() => setShowLangPicker(!showLangPicker)}
+                  >
+                    <Text style={styles.selectorText}>
                       {language === 'en' ? t.settings.english : t.settings.spanish}
                     </Text>
-                    <Text style={styles.langArrow}>{showLangPicker ? '▲' : '▼'}</Text>
+                    <Text style={styles.selectorArrow}>{showLangPicker ? '▲' : '▼'}</Text>
                   </Pressable>
                   {showLangPicker ? (
-                    <View style={styles.langOptions}>
-                      <Pressable
-                        style={[styles.langOption, language === 'en' && styles.langOptionActive]}
-                        onPress={() => {
-                          setLanguage('en');
-                          setShowLangPicker(false);
-                        }}
-                      >
-                        <Text style={[styles.langOptionText, language === 'en' && styles.langOptionTextActive]}>
-                          {t.settings.english}
-                        </Text>
-                      </Pressable>
-                      <Pressable
-                        style={[styles.langOption, language === 'es' && styles.langOptionActive]}
-                        onPress={() => {
-                          setLanguage('es');
-                          setShowLangPicker(false);
-                        }}
-                      >
-                        <Text style={[styles.langOptionText, language === 'es' && styles.langOptionTextActive]}>
-                          {t.settings.spanish}
-                        </Text>
-                      </Pressable>
+                    <View style={styles.options}>
+                      {(['en', 'es'] as Language[]).map((lang) => (
+                        <Pressable
+                          key={lang}
+                          style={[styles.option, language === lang && styles.optionActive]}
+                          onPress={() => {
+                            setLanguage(lang);
+                            setShowLangPicker(false);
+                          }}
+                        >
+                          <Text style={[styles.optionText, language === lang && styles.optionTextActive]}>
+                            {lang === 'en' ? t.settings.english : t.settings.spanish}
+                          </Text>
+                        </Pressable>
+                      ))}
                     </View>
                   ) : null}
                 </View>
@@ -163,13 +201,11 @@ export function MyProfileScreen() {
 
 const styles = StyleSheet.create({
   title: {
-    color: theme.colors.textPrimary,
     fontSize: theme.text.heading,
     fontWeight: '700',
     marginBottom: theme.spacing.md,
   },
   sectionTitle: {
-    color: theme.colors.textPrimary,
     fontSize: theme.text.title,
     fontWeight: '700',
     marginBottom: theme.spacing.sm,
@@ -195,12 +231,11 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.md,
   },
   settingsTitle: {
-    color: theme.colors.textSecondary,
     fontSize: theme.text.caption,
     fontWeight: '600',
     marginBottom: theme.spacing.xs,
   },
-  langSelector: {
+  selector: {
     backgroundColor: theme.colors.surfaceAlt,
     borderRadius: theme.radius.md,
     borderWidth: 1,
@@ -211,15 +246,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.md,
     minHeight: 48,
   },
-  langSelectorText: {
-    color: theme.colors.textPrimary,
+  selectorText: {
     fontSize: theme.text.body,
   },
-  langArrow: {
-    color: theme.colors.textSecondary,
+  selectorArrow: {
     fontSize: 12,
   },
-  langOptions: {
+  options: {
     marginTop: theme.spacing.xs,
     backgroundColor: theme.colors.surface,
     borderRadius: theme.radius.md,
@@ -227,19 +260,15 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.border,
     overflow: 'hidden',
   },
-  langOption: {
+  option: {
     paddingHorizontal: theme.spacing.md,
     paddingVertical: theme.spacing.sm,
   },
-  langOptionActive: {
-    backgroundColor: theme.colors.accentSoft,
-  },
-  langOptionText: {
-    color: theme.colors.textPrimary,
+  optionActive: {},
+  optionText: {
     fontSize: theme.text.body,
   },
-  langOptionTextActive: {
-    color: theme.colors.accent,
+  optionTextActive: {
     fontWeight: '600',
   },
 });

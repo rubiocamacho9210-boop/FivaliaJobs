@@ -132,5 +132,9 @@ export const es = {
     language: 'Idioma',
     english: 'Inglés',
     spanish: 'Español',
+    theme: 'Tema',
+    light: 'Claro',
+    dark: 'Oscuro',
+    system: 'Sistema',
   },
 };
