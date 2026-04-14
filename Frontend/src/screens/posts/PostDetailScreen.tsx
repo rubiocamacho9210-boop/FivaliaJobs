@@ -8,7 +8,7 @@ import { PostCard } from '@/components/PostCard';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { useCreateInterestMutation } from '@/hooks/useInterests';
 import { useAddFavoriteMutation, useMyFavoritesQuery, useRemoveFavoriteMutation } from '@/hooks/useFavorites';
-import { usePostDetailQuery } from '@/hooks/usePosts';
+import { usePostDetailQuery, useUpdatePostStatusMutation } from '@/hooks/usePosts';
 import { AppStackParamList } from '@/navigation/types';
 import { useAuthStore } from '@/store/authStore';
 import { getApiErrorMessage } from '@/utils/error';
@@ -22,6 +22,7 @@ export function PostDetailScreen({ route, navigation }: Props) {
   const user = useAuthStore((state) => state.user);
   const { data: post, isLoading, isError, refetch } = usePostDetailQuery(postId);
   const createInterestMutation = useCreateInterestMutation();
+  const updateStatusMutation = useUpdatePostStatusMutation(postId);
   const { t } = useI18n();
   const { colors, spacing, radius, text } = useTheme();
   const [interestError, setInterestError] = useState<string | null>(null);
@@ -132,9 +133,24 @@ export function PostDetailScreen({ route, navigation }: Props) {
 
       {post.userId === user?.id ? (
         <AppButton
-          label={t.posts.thisIsYourPublication}
-          onPress={() => {}}
-          disabled
+          label={post.status === 'ACTIVE' ? t.postActions.closePost : t.postActions.reopenPost}
+          onPress={() => updateStatusMutation.mutate(post.status === 'ACTIVE' ? 'CLOSED' : 'ACTIVE')}
+          loading={updateStatusMutation.isPending}
+          variant={post.status === 'ACTIVE' ? 'secondary' : 'ghost'}
+        />
+      ) : null}
+
+      {post.userId !== user?.id && post.status === 'CLOSED' && post.user ? (
+        <AppButton
+          label={t.reviews.writeReview}
+          onPress={() =>
+            navigation.navigate('WriteReview', {
+              postId: post.id,
+              toUserId: post.user!.id,
+              toUserName: post.user!.name,
+              toUserRole: post.user!.role ?? 'WORKER',
+            })
+          }
           variant="secondary"
         />
       ) : null}

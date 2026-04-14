@@ -29,3 +29,8 @@ export async function createPost(payload: CreatePostRequest): Promise<Post> {
   const response = await api.post<Post>('/posts', payload);
   return response.data;
 }
+
+export async function updatePostStatus(postId: string, status: 'ACTIVE' | 'CLOSED'): Promise<Post> {
+  const response = await api.patch<Post>(`/posts/${postId}/status`, { status });
+  return response.data;
+}

@@ -24,17 +24,18 @@ export class ProfileService {
   }
 
   async upsertProfile(userId: string, dto: UpdateProfileDto) {
+    const data = {
+      ...(dto.bio !== undefined && { bio: dto.bio }),
+      ...(dto.category !== undefined && { category: dto.category }),
+      ...(dto.location !== undefined && { location: dto.location }),
+      ...(dto.contact !== undefined && { contact: dto.contact }),
+      ...(dto.photoUrl !== undefined && { photoUrl: dto.photoUrl }),
+    };
+
     return this.prisma.profile.upsert({
       where: { userId },
-      update: { photoUrl: dto.photoUrl },
-      create: {
-        userId,
-        bio: dto.bio,
-        category: dto.category,
-        location: dto.location,
-        contact: dto.contact,
-        photoUrl: dto.photoUrl,
-      },
+      update: data,
+      create: { userId, ...data },
     });
   }
 }

@@ -22,4 +22,5 @@ export type AppStackParamList = {
   MyFollowers: undefined;
   MyFollowing: undefined;
   MyFavorites: undefined;
+  WriteReview: { postId: string; toUserId: string; toUserName: string; toUserRole: 'CLIENT' | 'WORKER' };
 };
