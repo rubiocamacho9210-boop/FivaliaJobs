@@ -6,8 +6,13 @@
     "start:dev": "nest start --watch",
     "start:prod": "node dist/main.js",
     "build": "nest build",
+    "setup:local": "node ./scripts/setup-local.mjs",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
     "db:migrate": "npx prisma migrate dev",
+    "db:migrate:deploy": "npx prisma migrate deploy",
     "db:generate": "npx prisma generate",
+    "db:seed": "node ./prisma/seed.js",
     "db:studio": "npx prisma studio"
   },
   "dependencies": {
@@ -15,14 +20,19 @@
     "@nestjs/core": "^11.1.18",
     "@nestjs/jwt": "^11.0.2",
     "@nestjs/passport": "^11.0.5",
-    "@nestjs/platform-express": "^11.1.18",
+    "@nestjs/platform-express": "^11.1.19",
+    "@nestjs/throttler": "^6.5.0",
     "@prisma/client": "^5.22.0",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "cors": "^2.8.6",
+    "dotenv": "^16.5.0",
+    "helmet": "^8.1.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.2",
+    "resend": "^6.11.0",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
@@ -35,5 +45,8 @@
     "prisma": "^5.22.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.0"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   }
 }

@@ -1,10 +1,10 @@
 # FivaliaJobs — Backend
 
-REST API for the FivaliaJobs MVP. Built with NestJS, Bun, PostgreSQL, and Prisma.
+REST API for the FivaliaJobs MVP. Built with NestJS, PostgreSQL, and Prisma.
 
 ## Stack
 
-- **Runtime**: Bun
+- **Runtime**: Node.js
 - **Framework**: NestJS
 - **Database**: PostgreSQL
 - **ORM**: Prisma
@@ -15,7 +15,7 @@ REST API for the FivaliaJobs MVP. Built with NestJS, Bun, PostgreSQL, and Prisma
 ### 1. Install dependencies
 
 ```bash
-bun install
+npm install
 ```
 
 ### 2. Configure environment
@@ -25,33 +25,43 @@ cp .env.example .env
 ```
 
 The defaults in `.env.example` match the Docker Compose credentials, so no changes needed for local development.
+By default this setup maps PostgreSQL to local port `5433` to avoid conflicts with an existing local DB on `5432`.
 
-### 3. Start the database
+### 3. One-command local setup (recommended)
 
 ```bash
-docker compose up -d
+npm run setup:local
 ```
 
-This starts a PostgreSQL 16 container on port `5432`. Data is persisted in a named Docker volume.
+This command:
+- Creates `.env` from `.env.example` if needed
+- Starts PostgreSQL with Docker Compose
+- Generates Prisma client
+- Applies migrations
+- Seeds demo data
 
-### 4. Run database migrations
+### 4. Start dev server
 
 ```bash
-bunx prisma migrate dev --name init
-```
-
-### 5. Start dev server
-
-```bash
-bun run start:dev
+npm run start:dev
 ```
 
 The API will be available at `http://localhost:3000`.
 
-### Stop the database
+### Optional DB commands
 
 ```bash
-docker compose down
+npm run db:up
+npm run db:down
+npm run db:migrate:deploy
+npm run db:seed
+```
+
+### Health checks
+
+```bash
+GET /health
+GET /health/db
 ```
 
 ---
@@ -105,6 +115,11 @@ POST /auth/register
   "role": "WORKER"
 }
 ```
+
+### Demo users created by seed
+
+- `cliente.demo@fivalia.com` / `Password123!`
+- `trabajador.demo@fivalia.com` / `Password123!`
 
 ### Login
 ```json

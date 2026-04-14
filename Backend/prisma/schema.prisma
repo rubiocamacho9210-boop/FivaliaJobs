@@ -28,12 +28,26 @@ model User {
   email        String   @unique
   passwordHash String
   role         Role
+  birthDate    DateTime
+  rating       Float    @default(0)
+  ratingCount  Int      @default(0)
+  emailVerified Boolean  @default(false)
+  emailVerificationCode   String?
+  emailVerificationExpiry DateTime?
+  failedLoginAttempts Int      @default(0)
+  lockedUntil         DateTime?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  profile   Profile?
-  posts     Post[]
-  interests Interest[]
+  profile     Profile?
+  posts       Post[]
+  interests   Interest[]
+  favorites   Favorite[]
+  following   Follow[]   @relation("Following")
+  followers   Follow[]   @relation("Followers")
+  reviewsGiven   Review[] @relation("ReviewsGiven")
+  reviewsReceived Review[] @relation("ReviewsReceived")
+  reports       Report[]   @relation("ReportsFiled")
 }
 
 model Profile {
@@ -43,6 +57,7 @@ model Profile {
   category  String?
   location  String?
   contact   String?
+  photoUrl  String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -64,6 +79,8 @@ model Post {
 
   user      User       @relation(fields: [userId], references: [id])
   interests Interest[]
+  favorites Favorite[]
+  reviews   Review[]
 }
 
 model Interest {
@@ -77,4 +94,78 @@ model Interest {
   post     Post @relation(fields: [postId], references: [id])
 
   @@unique([fromUserId, postId])
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+
+  @@unique([userId, postId])
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+
+  follower  User @relation("Following", fields: [followerId], references: [id])
+  following User @relation("Followers", fields: [followingId], references: [id])
+
+  @@unique([followerId, followingId])
+}
+
+enum ReviewType {
+  WORKER_REVIEW
+  CLIENT_REVIEW
+}
+
+model Review {
+  id         String     @id @default(cuid())
+  fromUserId String
+  toUserId   String
+  postId     String
+  rating     Int
+  comment    String?
+  type       ReviewType
+  createdAt  DateTime   @default(now())
+
+  fromUser User @relation("ReviewsGiven", fields: [fromUserId], references: [id])
+  toUser   User @relation("ReviewsReceived", fields: [toUserId], references: [id])
+  post     Post @relation(fields: [postId], references: [id])
+
+  @@unique([fromUserId, postId])
+}
+
+enum ReportType {
+  REPORT_USER
+  REPORT_POST
+}
+
+enum ReportReason {
+  SPAM
+  HARASSMENT
+  INAPPROPRIATE
+  FAKE
+  OTHER
+}
+
+model Report {
+  id        String       @id @default(cuid())
+  fromUserId String
+  targetType ReportType
+  targetId  String
+  reason    ReportReason
+  details   String?
+  status    String       @default("PENDING")
+  createdAt DateTime     @default(now())
+
+  fromUser User @relation("ReportsFiled", fields: [fromUserId], references: [id])
+
+  @@unique([fromUserId, targetType, targetId])
 }

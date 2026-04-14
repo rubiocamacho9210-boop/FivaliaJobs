@@ -2,11 +2,13 @@ import {
   Body,
   Controller,
   DefaultValuePipe,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
   Patch,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -16,6 +18,8 @@ import { AuthenticatedUser } from '../auth/jwt.strategy';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostStatusDto } from './dto/update-post-status.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
+import { PostType } from '@prisma/client';
 
 @Controller('posts')
 export class PostsController {
@@ -34,11 +38,14 @@ export class PostsController {
   findAll(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @Query('type') type?: PostType,
+    @Query('category') category?: string,
+    @Query('search') search?: string,
+    @Query('location') location?: string,
   ) {
-    return this.postsService.findAll(page, limit);
+    return this.postsService.findAll(page, limit, { type, category, search, location });
   }
 
-  // must be declared before :id to avoid "user" being captured as a param
   @Get('user/:userId')
   findByUserId(@Param('userId') userId: string) {
     return this.postsService.findByUserId(userId);
@@ -57,5 +64,24 @@ export class PostsController {
     @Body() dto: UpdatePostStatusDto,
   ) {
     return this.postsService.updateStatus(id, user.id, dto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put(':id')
+  updatePost(
+    @Param('id') id: string,
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() dto: UpdatePostDto,
+  ) {
+    return this.postsService.updatePost(id, user.id, dto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  deletePost(
+    @Param('id') id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.postsService.deletePost(id, user.id);
   }
 }

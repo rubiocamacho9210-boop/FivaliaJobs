@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "Profile" ADD COLUMN     "photoUrl" TEXT;
+
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "rating" DOUBLE PRECISION NOT NULL DEFAULT 0,
+ADD COLUMN     "ratingCount" INTEGER NOT NULL DEFAULT 0;
