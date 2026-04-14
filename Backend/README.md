@@ -25,6 +25,7 @@ cp .env.example .env
 ```
 
 The defaults in `.env.example` match the Docker Compose credentials, so no changes needed for local development.
+By default this setup maps PostgreSQL to local port `5433` to avoid conflicts with an existing local DB on `5432`.
 
 ### 3. One-command local setup (recommended)
 
