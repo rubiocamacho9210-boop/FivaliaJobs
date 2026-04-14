@@ -13,12 +13,14 @@ import { AppStackParamList } from '@/navigation/types';
 import { useAuthStore } from '@/store/authStore';
 import { getApiErrorMessage } from '@/utils/error';
 import { theme } from '@/constants/theme';
+import { useI18n } from '@/i18n';
 
 export function FeedScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const user = useAuthStore((state) => state.user);
   const { data: posts, isLoading, isError, refetch } = usePostsQuery();
   const createInterestMutation = useCreateInterestMutation();
+  const { t } = useI18n();
   const [interestError, setInterestError] = useState<string | null>(null);
 
   const onPressInterest = async (postId: string) => {
@@ -33,17 +35,19 @@ export function FeedScreen() {
   return (
     <ScreenContainer>
       <View style={styles.header}>
-        <Text style={styles.title}>Feed</Text>
-        <Text style={styles.subtitle}>Hola, {user?.name ?? 'usuario'}.</Text>
+        <Text style={styles.title}>{t.tabs.feed}</Text>
+        <Text style={styles.subtitle}>
+          {t.auth.welcome.replace('FivaliaJobs', '').trim()}, {user?.name ?? t.postCard.user}.
+        </Text>
       </View>
 
       {interestError ? <Text style={styles.error}>{interestError}</Text> : null}
 
       {isLoading ? <LoadingState /> : null}
-      {isError ? <ErrorState message="No pudimos cargar el feed." onRetry={refetch} /> : null}
+      {isError ? <ErrorState message={t.errors.couldNotLoadFeed} onRetry={refetch} /> : null}
 
       {!isLoading && !isError && (posts?.length ?? 0) === 0 ? (
-        <EmptyState title="Sin publicaciones" description="Todavia no hay posts activos." />
+        <EmptyState title={t.posts.noActivePosts} description={t.posts.noActivePosts} />
       ) : null}
 
       {!isLoading && !isError && posts ? (

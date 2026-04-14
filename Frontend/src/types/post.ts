@@ -5,6 +5,10 @@ export type PostAuthor = {
   id: string;
   name: string;
   role?: 'CLIENT' | 'WORKER';
+  profile?: {
+    location: string | null;
+    contact: string | null;
+  } | null;
 };
 
 export type Post = {

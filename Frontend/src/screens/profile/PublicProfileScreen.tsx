@@ -11,6 +11,7 @@ import { theme } from '@/constants/theme';
 import { usePostsByUserQuery } from '@/hooks/usePosts';
 import { usePublicProfileQuery } from '@/hooks/useProfile';
 import { AppStackParamList } from '@/navigation/types';
+import { useI18n } from '@/i18n';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'PublicProfile'>;
 
@@ -18,6 +19,7 @@ export function PublicProfileScreen({ route, navigation }: Props) {
   const { userId } = route.params;
   const profileQuery = usePublicProfileQuery(userId);
   const postsQuery = usePostsByUserQuery(userId);
+  const { t } = useI18n();
 
   if (profileQuery.isLoading) {
     return (
@@ -30,7 +32,7 @@ export function PublicProfileScreen({ route, navigation }: Props) {
   if (profileQuery.isError || !profileQuery.data) {
     return (
       <ScreenContainer>
-        <ErrorState message="No pudimos cargar este perfil." onRetry={profileQuery.refetch} />
+        <ErrorState message={t.profile.couldNotLoadProfile} onRetry={profileQuery.refetch} />
       </ScreenContainer>
     );
   }
@@ -52,15 +54,18 @@ export function PublicProfileScreen({ route, navigation }: Props) {
         ListHeaderComponent={
           <>
             <ProfileHeader profile={profileQuery.data} />
-            <Text style={styles.listTitle}>Publicaciones</Text>
+            <Text style={styles.listTitle}>{t.profile.publications}</Text>
             {postsQuery.isLoading ? <LoadingState /> : null}
             {postsQuery.isError ? (
-              <ErrorState message="No pudimos cargar publicaciones." onRetry={postsQuery.refetch} />
+              <ErrorState
+                message={t.profile.couldNotLoadPublications}
+                onRetry={postsQuery.refetch}
+              />
             ) : null}
             {!postsQuery.isLoading && !postsQuery.isError && (postsQuery.data?.length ?? 0) === 0 ? (
               <EmptyState
-                title="Sin publicaciones"
-                description="Este usuario aun no tiene publicaciones visibles."
+                title={t.profile.noPublicationsYet}
+                description={t.profile.userNoPublications}
               />
             ) : null}
           </>

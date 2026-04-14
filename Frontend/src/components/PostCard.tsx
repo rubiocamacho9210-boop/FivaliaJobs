@@ -3,6 +3,7 @@ import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { AppButton } from '@/components/AppButton';
 import { theme } from '@/constants/theme';
 import { Post } from '@/types/post';
+import { useI18n } from '@/i18n';
 
 type Props = {
   post: Post;
@@ -21,15 +22,22 @@ export function PostCard({
   interestLoading = false,
   hideInterestButton = false,
 }: Props) {
+  const { t } = useI18n();
+
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}>
       <View style={styles.header}>
         <View style={styles.avatar} />
         <View style={styles.headerTextWrap}>
           <Pressable disabled={!onPressAuthor} onPress={onPressAuthor}>
-            <Text style={styles.author}>{post.user?.name ?? 'Usuario'}</Text>
+            <Text style={styles.author}>{post.user?.name ?? t.postCard.user}</Text>
           </Pressable>
           <Text style={styles.category}>{post.category}</Text>
+          {post.user?.profile?.location ? (
+            <Text style={styles.location}>
+              {t.postCard.location}: {post.user.profile.location}
+            </Text>
+          ) : null}
         </View>
       </View>
 
@@ -39,15 +47,15 @@ export function PostCard({
       </Text>
 
       <View style={styles.meta}>
-        <Text style={styles.metaText}>{post.type === 'NEED' ? 'Necesito' : 'Ofrezco'}</Text>
+        <Text style={styles.metaText}>{post.type === 'NEED' ? t.posts.need : t.posts.offer}</Text>
         <Text style={styles.metaDot}>•</Text>
-        <Text style={styles.metaText}>{post.status === 'ACTIVE' ? 'Activo' : 'Cerrado'}</Text>
+        <Text style={styles.metaText}>{post.status === 'ACTIVE' ? t.postCard.active : t.postCard.closed}</Text>
       </View>
 
       {!hideInterestButton && onPressInterest ? (
         <View style={styles.actions}>
           <AppButton
-            label="Me interesa"
+            label={t.postCard.interested}
             onPress={onPressInterest}
             loading={interestLoading}
             style={styles.interestButton}
@@ -104,6 +112,11 @@ const styles = StyleSheet.create({
   category: {
     color: theme.colors.textSecondary,
     fontSize: 12,
+  },
+  location: {
+    color: theme.colors.textSecondary,
+    fontSize: 12,
+    marginTop: 2,
   },
   title: {
     color: theme.colors.textPrimary,

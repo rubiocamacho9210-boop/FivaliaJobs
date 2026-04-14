@@ -11,10 +11,12 @@ import { AppTabParamList } from '@/navigation/types';
 import { PostType } from '@/types/post';
 import { getApiErrorMessage } from '@/utils/error';
 import { backendLimits, hasLengthBetween } from '@/utils/validation';
+import { useI18n } from '@/i18n';
 
 export function CreatePostScreen() {
   const navigation = useNavigation<BottomTabNavigationProp<AppTabParamList>>();
   const createPostMutation = useCreatePostMutation();
+  const { t } = useI18n();
   const [type, setType] = useState<PostType>('NEED');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -24,12 +26,14 @@ export function CreatePostScreen() {
   const onSubmit = async () => {
     setError(null);
     if (!title.trim() || !description.trim() || !category.trim()) {
-      setError('Completa tipo, titulo, descripcion y categoria.');
+      setError(t.posts.completeFields);
       return;
     }
     if (!hasLengthBetween(title, backendLimits.post.titleMin, backendLimits.post.titleMax)) {
       setError(
-        `El titulo debe tener entre ${backendLimits.post.titleMin} y ${backendLimits.post.titleMax} caracteres.`,
+        t.posts.titleLength
+          .replace('{{min}}', String(backendLimits.post.titleMin))
+          .replace('{{max}}', String(backendLimits.post.titleMax)),
       );
       return;
     }
@@ -41,12 +45,14 @@ export function CreatePostScreen() {
       )
     ) {
       setError(
-        `La descripcion debe tener entre ${backendLimits.post.descriptionMin} y ${backendLimits.post.descriptionMax} caracteres.`,
+        t.posts.descriptionLength
+          .replace('{{min}}', String(backendLimits.post.descriptionMin))
+          .replace('{{max}}', String(backendLimits.post.descriptionMax)),
       );
       return;
     }
     if (category.trim().length > backendLimits.post.categoryMax) {
-      setError(`La categoria permite maximo ${backendLimits.post.categoryMax} caracteres.`);
+      setError(t.posts.categoryMax.replace('{{max}}', String(backendLimits.post.categoryMax)));
       return;
     }
 
@@ -69,40 +75,50 @@ export function CreatePostScreen() {
   return (
     <ScreenContainer scrollable>
       <View style={styles.header}>
-        <Text style={styles.title}>Crear publicacion</Text>
-        <Text style={styles.subtitle}>Comparte una necesidad o un servicio.</Text>
+        <Text style={styles.title}>{t.posts.createPost}</Text>
+        <Text style={styles.subtitle}>{t.posts.createPostSubtitle}</Text>
       </View>
 
-      <Text style={styles.label}>Tipo</Text>
+      <Text style={styles.label}>{t.posts.type}</Text>
       <View style={styles.typeRow}>
         <AppButton
-          label="Necesito"
+          label={t.posts.need}
           onPress={() => setType('NEED')}
           variant={type === 'NEED' ? 'primary' : 'secondary'}
           style={styles.typeButton}
         />
         <AppButton
-          label="Ofrezco"
+          label={t.posts.offer}
           onPress={() => setType('OFFER')}
           variant={type === 'OFFER' ? 'primary' : 'secondary'}
           style={styles.typeButton}
         />
       </View>
 
-      <AppInput label="Titulo" value={title} onChangeText={setTitle} placeholder="Ej. Necesito logo" />
       <AppInput
-        label="Descripcion"
+        label={t.posts.title}
+        value={title}
+        onChangeText={setTitle}
+        placeholder={t.posts.titlePlaceholder}
+      />
+      <AppInput
+        label={t.posts.description}
         value={description}
         onChangeText={setDescription}
-        placeholder="Describe lo que necesitas u ofreces"
+        placeholder={t.posts.descriptionPlaceholder}
         multiline
         style={styles.multiline}
       />
-      <AppInput label="Categoria" value={category} onChangeText={setCategory} placeholder="Ej. Diseno" />
+      <AppInput
+        label={t.profile.category}
+        value={category}
+        onChangeText={setCategory}
+        placeholder={t.profile.categoryPlaceholder}
+      />
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
-      <AppButton label="Publicar" onPress={onSubmit} loading={createPostMutation.isPending} />
+      <AppButton label={t.posts.publish} onPress={onSubmit} loading={createPostMutation.isPending} />
     </ScreenContainer>
   );
 }

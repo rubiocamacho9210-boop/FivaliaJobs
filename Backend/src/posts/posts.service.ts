@@ -11,7 +11,17 @@ const MAX_PAGE_LIMIT = 50;
 
 const postAuthorSelect = {
   user: {
-    select: { id: true, name: true, role: true },
+    select: {
+      id: true,
+      name: true,
+      role: true,
+      profile: {
+        select: {
+          location: true,
+          contact: true,
+        },
+      },
+    },
   },
 };
 

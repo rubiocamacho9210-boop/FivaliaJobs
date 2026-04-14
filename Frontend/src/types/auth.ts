@@ -22,4 +22,5 @@ export type RegisterRequest = {
   email: string;
   password: string;
   role: UserRole;
+  birthDate: string;
 };

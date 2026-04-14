@@ -10,25 +10,27 @@ import { ScreenContainer } from '@/components/ScreenContainer';
 import { theme } from '@/constants/theme';
 import { useMyInterestsQuery } from '@/hooks/useInterests';
 import { AppStackParamList } from '@/navigation/types';
+import { useI18n } from '@/i18n';
 
 export function MyInterestsScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const interestsQuery = useMyInterestsQuery();
+  const { t } = useI18n();
 
   return (
     <ScreenContainer>
-      <Text style={styles.title}>Mis intereses</Text>
-      <Text style={styles.subtitle}>Publicaciones donde marcaste "Me interesa".</Text>
+      <Text style={styles.title}>{t.interests.title}</Text>
+      <Text style={styles.subtitle}>{t.interests.subtitle}</Text>
 
       {interestsQuery.isLoading ? <LoadingState /> : null}
       {interestsQuery.isError ? (
-        <ErrorState message="No pudimos cargar tus intereses." onRetry={interestsQuery.refetch} />
+        <ErrorState message={t.interests.couldNotLoadInterests} onRetry={interestsQuery.refetch} />
       ) : null}
 
       {!interestsQuery.isLoading && !interestsQuery.isError && (interestsQuery.data?.length ?? 0) === 0 ? (
         <EmptyState
-          title="Aun no tienes intereses"
-          description="Explora el feed y usa el boton Me interesa en una publicacion."
+          title={t.interests.noInterests}
+          description={t.interests.noInterestsDescription}
         />
       ) : null}
 

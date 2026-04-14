@@ -35,6 +35,7 @@ export class AuthService {
         email,
         passwordHash,
         role: dto.role,
+        birthDate: new Date(dto.birthDate),
       },
       select: {
         id: true,
