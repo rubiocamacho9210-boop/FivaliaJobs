@@ -21,7 +21,7 @@ export function LoginScreen({ navigation }: Props) {
   const onSubmit = async () => {
     setFormError(null);
     if (!email.trim() || !password.trim()) {
-      setFormError('Completa correo y contrasena.');
+      setFormError('Completa correo y contraseña.');
       return;
     }
     if (!isValidEmail(email)) {
@@ -55,7 +55,7 @@ export function LoginScreen({ navigation }: Props) {
         autoComplete="email"
       />
       <AppInput
-        label="Contrasena"
+        label="Contraseña"
         value={password}
         onChangeText={setPassword}
         placeholder="********"

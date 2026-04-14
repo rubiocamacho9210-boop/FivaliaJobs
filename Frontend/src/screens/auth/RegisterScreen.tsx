@@ -50,7 +50,7 @@ export function RegisterScreen({ navigation }: Props) {
       password.length > backendLimits.register.passwordMax
     ) {
       setFormError(
-        `La contrasena debe tener entre ${backendLimits.register.passwordMin} y ${backendLimits.register.passwordMax} caracteres.`,
+        `La contraseña debe tener entre ${backendLimits.register.passwordMin} y ${backendLimits.register.passwordMax} caracteres.`,
       );
       return;
     }
@@ -96,7 +96,7 @@ export function RegisterScreen({ navigation }: Props) {
         autoComplete="email"
       />
       <AppInput
-        label="Contrasena"
+        label="Contraseña"
         value={password}
         onChangeText={setPassword}
         placeholder="Minimo 8 caracteres"
