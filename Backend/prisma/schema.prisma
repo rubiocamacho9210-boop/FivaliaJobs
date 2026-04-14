@@ -29,6 +29,8 @@ model User {
   passwordHash String
   role         Role
   birthDate    DateTime
+  rating       Float    @default(0)
+  ratingCount  Int      @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -44,6 +46,7 @@ model Profile {
   category  String?
   location  String?
   contact   String?
+  photoUrl  String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

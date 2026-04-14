@@ -11,7 +11,7 @@ export class ProfileService {
       where: { userId },
       include: {
         user: {
-          select: { id: true, name: true, role: true },
+          select: { id: true, name: true, role: true, rating: true, ratingCount: true },
         },
       },
     });
@@ -26,13 +26,14 @@ export class ProfileService {
   async upsertProfile(userId: string, dto: UpdateProfileDto) {
     return this.prisma.profile.upsert({
       where: { userId },
-      update: { ...dto },
+      update: { photoUrl: dto.photoUrl },
       create: {
         userId,
         bio: dto.bio,
         category: dto.category,
         location: dto.location,
         contact: dto.contact,
+        photoUrl: dto.photoUrl,
       },
     });
   }

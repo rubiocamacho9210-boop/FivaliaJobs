@@ -15,10 +15,13 @@ const postAuthorSelect = {
       id: true,
       name: true,
       role: true,
+      rating: true,
+      ratingCount: true,
       profile: {
         select: {
           location: true,
           contact: true,
+          photoUrl: true,
         },
       },
     },
