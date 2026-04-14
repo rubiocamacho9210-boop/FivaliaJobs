@@ -183,6 +183,20 @@ export function MyProfileScreen() {
                 <Text style={[styles.profileRole, { color: colors.textSecondary }]}>
                   {user?.role === 'WORKER' ? t.register.worker : t.register.client}
                 </Text>
+                {user?.emailVerified ? (
+                  <View style={[styles.verifiedBadge, { backgroundColor: colors.success, marginTop: spacing.xs }]}>
+                    <Text style={styles.verifiedText}>✓ {t.emailVerification.verified}</Text>
+                  </View>
+                ) : (
+                  <Pressable
+                    onPress={() => navigation.navigate('VerifyEmail')}
+                    style={[styles.verifyEmailButton, { borderColor: colors.warning, marginTop: spacing.xs }]}
+                  >
+                    <Text style={[styles.verifyEmailText, { color: colors.warning }]}>
+                      {t.emailVerification.verifyEmail}
+                    </Text>
+                  </Pressable>
+                )}
               </View>
             ) : null}
 
@@ -387,5 +401,27 @@ const styles = StyleSheet.create({
   profileRole: {
     fontSize: 15,
     marginTop: 2,
+  },
+  verifiedBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginTop: 4,
+  },
+  verifiedText: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  verifyEmailButton: {
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginTop: 4,
+  },
+  verifyEmailText: {
+    fontSize: 13,
+    fontWeight: '600',
   },
 });

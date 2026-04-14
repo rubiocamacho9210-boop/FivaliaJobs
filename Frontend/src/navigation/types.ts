@@ -18,6 +18,7 @@ export type AppStackParamList = {
   PostDetail: { postId: string };
   PublicProfile: { userId: string };
   ProfileSetup: { mode: 'create' | 'edit' };
+  VerifyEmail: undefined;
   MyFollowers: undefined;
   MyFollowing: undefined;
   MyFavorites: undefined;

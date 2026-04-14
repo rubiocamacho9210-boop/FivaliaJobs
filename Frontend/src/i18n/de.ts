@@ -206,6 +206,18 @@ export const de = {
     newFollower: 'Neuer Follower',
     newReview: 'Neue Bewertung',
   },
+  emailVerification: {
+    title: 'E-Mail bestätigen',
+    subtitle: 'Geben Sie den 6-stelligen Code ein, der an Ihre E-Mail gesendet wurde.',
+    codeLabel: 'Bestätigungscode',
+    verify: 'Bestätigen',
+    noCode: 'Code nicht erhalten?',
+    resend: 'Erneut senden',
+    success: 'E-Mail erfolgreich bestätigt!',
+    verified: 'E-Mail bestätigt',
+    verifyEmail: 'E-Mail bestätigen',
+    codeLength: 'Der Code muss 6 Ziffern haben.',
+  },
   tabs: {
     feed: 'Feed',
     publish: 'Veröffentlichen',

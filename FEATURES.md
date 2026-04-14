@@ -99,8 +99,8 @@
 - [ ] Historial de conversaciones
 
 #### Seguridad/Confianza
-- [ ] Verificar email/teléfono
-- [ ] Badges de verificación
+- [x] **Verificar email** - Código de 6 dígitos enviado por email
+- [x] **Badge de verificación** - Muestra "Email verificado" en perfil
 
 #### Monetización
 - [ ] Suscripciones premium

@@ -9,9 +9,10 @@ import { FollowsModule } from './follows/follows.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { ReportsModule } from './reports/reports.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { EmailVerificationModule } from './email-verification/email-verification.module';
 import { HealthModule } from './health/health.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, ProfileModule, PostsModule, InterestsModule, FavoritesModule, FollowsModule, ReviewsModule, ReportsModule, NotificationsModule, HealthModule],
+  imports: [PrismaModule, AuthModule, ProfileModule, PostsModule, InterestsModule, FavoritesModule, FollowsModule, ReviewsModule, ReportsModule, NotificationsModule, EmailVerificationModule, HealthModule],
 })
 export class AppModule {}

@@ -14,6 +14,7 @@ import { PostDetailScreen } from '@/screens/posts/PostDetailScreen';
 import { CreatePostScreen } from '@/screens/posts/CreatePostScreen';
 import { ProfileSetupScreen } from '@/screens/profile/ProfileSetupScreen';
 import { PublicProfileScreen } from '@/screens/profile/PublicProfileScreen';
+import { VerifyEmailScreen } from '@/screens/profile/VerifyEmailScreen';
 import { MyFollowersScreen } from '@/screens/feed/MyFollowersScreen';
 import { MyFollowingScreen } from '@/screens/feed/MyFollowingScreen';
 import { MyFavoritesScreen } from '@/screens/feed/MyFavoritesScreen';
@@ -84,6 +85,11 @@ export function AppNavigator({ forceProfileSetup = false }: Props) {
           title: route.params.mode === 'create' ? t.profile.setupProfile : t.profile.editProfile,
           gestureEnabled: route.params.mode === 'edit',
         })}
+      />
+      <Stack.Screen
+        name="VerifyEmail"
+        component={VerifyEmailScreen}
+        options={{ title: t.emailVerification.title }}
       />
       <Stack.Screen
         name="MyFollowers"

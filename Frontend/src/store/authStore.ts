@@ -9,6 +9,7 @@ type AuthState = {
   needsProfileSetup: boolean;
   hasHydrated: boolean;
   setSession: (token: string, user: AuthUser) => void;
+  setUser: (user: Partial<AuthUser>) => void;
   setNeedsProfileSetup: (value: boolean) => void;
   clearSession: () => void;
   setHasHydrated: (value: boolean) => void;
@@ -22,6 +23,9 @@ export const useAuthStore = create<AuthState>()(
       needsProfileSetup: false,
       hasHydrated: false,
       setSession: (token, user) => set({ token, user }),
+      setUser: (userUpdate) => set((state) => ({
+        user: state.user ? { ...state.user, ...userUpdate } : null,
+      })),
       setNeedsProfileSetup: (value) => set({ needsProfileSetup: value }),
       clearSession: () => set({ token: null, user: null, needsProfileSetup: false }),
       setHasHydrated: (value) => set({ hasHydrated: value }),

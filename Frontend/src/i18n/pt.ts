@@ -206,6 +206,18 @@ export const pt = {
     newFollower: 'Novo seguidor',
     newReview: 'Nova avaliação',
   },
+  emailVerification: {
+    title: 'Verificar Email',
+    subtitle: 'Digite o código de 6 dígitos enviado para seu email.',
+    codeLabel: 'Código de Verificação',
+    verify: 'Verificar',
+    noCode: 'Não recebeu o código?',
+    resend: 'Reenviar',
+    success: 'Email verificado com sucesso!',
+    verified: 'Email verificado',
+    verifyEmail: 'Verificar email',
+    codeLength: 'O código deve ter 6 dígitos.',
+  },
   tabs: {
     feed: 'Feed',
     publish: 'Publicar',

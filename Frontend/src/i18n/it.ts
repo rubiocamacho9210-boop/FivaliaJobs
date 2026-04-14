@@ -206,6 +206,18 @@ export const it = {
     newFollower: 'Nuovo follower',
     newReview: 'Nuova recensione',
   },
+  emailVerification: {
+    title: 'Verifica Email',
+    subtitle: 'Inserisci il codice a 6 cifre inviato alla tua email.',
+    codeLabel: 'Codice di verifica',
+    verify: 'Verifica',
+    noCode: 'Non hai ricevuto il codice?',
+    resend: 'Invia di nuovo',
+    success: 'Email verificata con successo!',
+    verified: 'Email verificata',
+    verifyEmail: 'Verifica email',
+    codeLength: 'Il codice deve essere di 6 cifre.',
+  },
   tabs: {
     feed: 'Feed',
     publish: 'Pubblica',
