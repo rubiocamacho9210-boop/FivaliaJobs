@@ -198,10 +198,19 @@ export const en = {
     postReopened: 'Post reopened',
     postDeleted: 'Post deleted',
   },
+  notifications: {
+    title: 'Notifications',
+    noNotifications: 'No notifications',
+    noNotificationsDescription: 'You will see activity on your posts here.',
+    newInterest: 'New interest',
+    newFollower: 'New follower',
+    newReview: 'New review',
+  },
   tabs: {
     feed: 'Feed',
     publish: 'Publish',
     interests: 'Interests',
+    notifications: 'Alerts',
     profile: 'Profile',
   },
   settings: {

@@ -198,10 +198,19 @@ export const fr = {
     postReopened: 'Publication rouverte',
     postDeleted: 'Publication supprimée',
   },
+  notifications: {
+    title: 'Notifications',
+    noNotifications: 'Pas de notifications',
+    noNotificationsDescription: 'Vous verrez ici l\'activité sur vos publications.',
+    newInterest: 'Nouvel intérêt',
+    newFollower: 'Nouvel abonné',
+    newReview: 'Nouvel avis',
+  },
   tabs: {
     feed: 'Fil',
     publish: 'Publier',
     interests: 'Intérêts',
+    notifications: 'Alertes',
     profile: 'Profil',
   },
   settings: {

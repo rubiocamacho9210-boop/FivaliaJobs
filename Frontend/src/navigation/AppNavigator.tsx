@@ -7,15 +7,16 @@ import { useTheme } from '@/context/ThemeContext';
 import { useI18n } from '@/i18n';
 import { AppStackParamList, AppTabParamList } from '@/navigation/types';
 import { FeedScreen } from '@/screens/feed/FeedScreen';
-import { MyFavoritesScreen } from '@/screens/feed/MyFavoritesScreen';
-import { MyFollowersScreen } from '@/screens/feed/MyFollowersScreen';
-import { MyFollowingScreen } from '@/screens/feed/MyFollowingScreen';
 import { MyInterestsScreen } from '@/screens/feed/MyInterestsScreen';
 import { MyProfileScreen } from '@/screens/feed/MyProfileScreen';
+import { NotificationsScreen } from '@/screens/notifications/NotificationsScreen';
 import { PostDetailScreen } from '@/screens/posts/PostDetailScreen';
 import { CreatePostScreen } from '@/screens/posts/CreatePostScreen';
 import { ProfileSetupScreen } from '@/screens/profile/ProfileSetupScreen';
 import { PublicProfileScreen } from '@/screens/profile/PublicProfileScreen';
+import { MyFollowersScreen } from '@/screens/feed/MyFollowersScreen';
+import { MyFollowingScreen } from '@/screens/feed/MyFollowingScreen';
+import { MyFavoritesScreen } from '@/screens/feed/MyFavoritesScreen';
 
 const Tab = createBottomTabNavigator<AppTabParamList>();
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -43,8 +44,7 @@ function MainTabsNavigator() {
       <Tab.Screen name="Feed" component={FeedScreen} options={{ title: t.tabs.feed }} />
       <Tab.Screen name="CreatePost" component={CreatePostScreen} options={{ title: t.tabs.publish }} />
       <Tab.Screen name="MyInterests" component={MyInterestsScreen} options={{ title: t.tabs.interests }} />
-      <Tab.Screen name="MyFavorites" component={MyFavoritesScreen} options={{ title: t.favorites.title }} />
-      <Tab.Screen name="MyFollowing" component={MyFollowingScreen} options={{ title: t.follows.following }} />
+      <Tab.Screen name="Notifications" component={NotificationsScreen} options={{ title: t.notifications.title }} />
       <Tab.Screen name="MyProfile" component={MyProfileScreen} options={{ title: t.tabs.profile }} />
     </Tab.Navigator>
   );
@@ -89,6 +89,16 @@ export function AppNavigator({ forceProfileSetup = false }: Props) {
         name="MyFollowers"
         component={MyFollowersScreen}
         options={{ title: t.follows.followers }}
+      />
+      <Stack.Screen
+        name="MyFollowing"
+        component={MyFollowingScreen}
+        options={{ title: t.follows.following }}
+      />
+      <Stack.Screen
+        name="MyFavorites"
+        component={MyFavoritesScreen}
+        options={{ title: t.favorites.title }}
       />
     </Stack.Navigator>
   );

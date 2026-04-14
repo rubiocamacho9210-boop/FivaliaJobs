@@ -61,6 +61,13 @@
 - [x] **Selector de tema** - Cambiar tema desde perfil
 - [x] **Adaptación dinámica** - Todos los componentes respetan el tema
 
+#### Notificaciones
+- [x] **Sistema de notificaciones** - Polling cada 5 minutos
+- [x] **Notificaciones de interés** - Cuando alguien se interesa en tu post
+- [x] **Notificaciones de followers** - Cuando alguien te sigue
+- [x] **Notificaciones de reseñas** - Cuando te dejan una reseña
+- [x] **Pantalla de notificaciones** - Ver toda la actividad
+
 #### Base de datos (Backend)
 - [x] **Modelo User** - Con rating y ratingCount
 - [x] **Modelo Profile** - Con photoUrl
@@ -74,6 +81,7 @@
 - [x] **Endpoints de follows** - Seguir/dejar de seguir usuarios
 - [x] **Endpoints de reseñas** - Crear y ver reseñas
 - [x] **Endpoints de reportes** - Reportar usuarios/posts
+- [x] **Endpoint de notificaciones** - Actividad reciente del usuario
 - [x] **Filtros en posts** - type, category, search, location
 - [x] **CRUD de posts** - Editar y eliminar publicaciones
 
@@ -88,7 +96,6 @@
 
 #### Mensajería/Chat
 - [ ] Chat interno entre usuarios
-- [ ] Notificaciones de mensajes
 - [ ] Historial de conversaciones
 
 #### Seguridad/Confianza
@@ -109,7 +116,7 @@
 
 | Fecha | Commit | Descripción |
 |-------|--------|-------------|
-| 2026-04-14 | `xxx` | Implementar reseñas escritas, reportes y acciones de posts |
+| 2026-04-14 | `xxx` | Implementar polling notifications (sin push) |
 | 2026-04-14 | `dac2419` | Agregar campos rating y photoUrl a User y Profile |
 | 2026-04-14 | `3c1d41a` | Agregar rating con estrellas y subida de fotos |
 | 2026-04-14 | `af8c194` | Agregar subida rápida de foto desde Mi Perfil |

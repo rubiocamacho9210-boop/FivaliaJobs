@@ -198,10 +198,19 @@ export const es = {
     postReopened: 'Publicación reabierta',
     postDeleted: 'Publicación eliminada',
   },
+  notifications: {
+    title: 'Notificaciones',
+    noNotifications: 'Sin notificaciones',
+    noNotificationsDescription: 'Aquí verás la actividad en tus publicaciones.',
+    newInterest: 'Nuevo interés',
+    newFollower: 'Nuevo seguidor',
+    newReview: 'Nueva reseña',
+  },
   tabs: {
     feed: 'Feed',
     publish: 'Publicar',
     interests: 'Intereses',
+    notifications: 'Alertas',
     profile: 'Perfil',
   },
   settings: {

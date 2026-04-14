@@ -8,9 +8,10 @@ import { FavoritesModule } from './favorites/favorites.module';
 import { FollowsModule } from './follows/follows.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { ReportsModule } from './reports/reports.module';
+import { NotificationsModule } from './notifications/notifications.module';
 import { HealthModule } from './health/health.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, ProfileModule, PostsModule, InterestsModule, FavoritesModule, FollowsModule, ReviewsModule, ReportsModule, HealthModule],
+  imports: [PrismaModule, AuthModule, ProfileModule, PostsModule, InterestsModule, FavoritesModule, FollowsModule, ReviewsModule, ReportsModule, NotificationsModule, HealthModule],
 })
 export class AppModule {}

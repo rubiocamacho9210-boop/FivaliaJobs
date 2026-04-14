@@ -198,10 +198,19 @@ export const de = {
     postReopened: 'Beitrag wieder geöffnet',
     postDeleted: 'Beitrag gelöscht',
   },
+  notifications: {
+    title: 'Benachrichtigungen',
+    noNotifications: 'Keine Benachrichtigungen',
+    noNotificationsDescription: 'Sie sehen hier die Aktivität zu Ihren Beiträgen.',
+    newInterest: 'Neues Interesse',
+    newFollower: 'Neuer Follower',
+    newReview: 'Neue Bewertung',
+  },
   tabs: {
     feed: 'Feed',
     publish: 'Veröffentlichen',
     interests: 'Interessen',
+    notifications: 'Benachrichtigungen',
     profile: 'Profil',
   },
   settings: {

@@ -198,10 +198,19 @@ export const pt = {
     postReopened: 'Postagem reaberta',
     postDeleted: 'Postagem excluída',
   },
+  notifications: {
+    title: 'Notificações',
+    noNotifications: 'Sem notificações',
+    noNotificationsDescription: 'Você verá aqui a atividade nas suas postagens.',
+    newInterest: 'Novo interesse',
+    newFollower: 'Novo seguidor',
+    newReview: 'Nova avaliação',
+  },
   tabs: {
     feed: 'Feed',
     publish: 'Publicar',
     interests: 'Interesses',
+    notifications: 'Alertas',
     profile: 'Perfil',
   },
   settings: {
