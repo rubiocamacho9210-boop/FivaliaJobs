@@ -80,6 +80,13 @@ export function PostDetailScreen({ route, navigation }: Props) {
         <Text style={styles.sectionBody}>{post.type === 'NEED' ? 'Necesita ayuda' : 'Ofrece servicio'}</Text>
       </View>
 
+      {post.user?.profile?.contact ? (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Contacto</Text>
+          <Text style={styles.sectionBody}>{post.user.profile.contact}</Text>
+        </View>
+      ) : null}
+
       {post.userId === user?.id ? (
         <AppButton label="Esta es tu publicacion" onPress={() => {}} disabled variant="secondary" />
       ) : null}

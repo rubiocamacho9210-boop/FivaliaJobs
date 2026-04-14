@@ -30,6 +30,9 @@ export function PostCard({
             <Text style={styles.author}>{post.user?.name ?? 'Usuario'}</Text>
           </Pressable>
           <Text style={styles.category}>{post.category}</Text>
+          {post.user?.profile?.location ? (
+            <Text style={styles.location}>Ubicacion: {post.user.profile.location}</Text>
+          ) : null}
         </View>
       </View>
 
@@ -104,6 +107,11 @@ const styles = StyleSheet.create({
   category: {
     color: theme.colors.textSecondary,
     fontSize: 12,
+  },
+  location: {
+    color: theme.colors.textSecondary,
+    fontSize: 12,
+    marginTop: 2,
   },
   title: {
     color: theme.colors.textPrimary,
