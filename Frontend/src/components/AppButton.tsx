@@ -65,9 +65,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.lg,
   },
   secondary: {
-    backgroundColor: theme.colors.surface,
-    borderColor: theme.colors.border,
-    borderWidth: 1,
+    backgroundColor: theme.colors.accentSoft,
+    borderColor: 'transparent',
+    borderWidth: 0,
   },
   ghost: {
     backgroundColor: 'transparent',
@@ -86,5 +86,6 @@ const styles = StyleSheet.create({
   },
   secondaryLabel: {
     color: theme.colors.accent,
+    fontWeight: '600',
   },
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { theme } from '@/constants/theme';
 import { Profile } from '@/types/profile';
 
@@ -34,6 +34,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: theme.spacing.md,
     padding: theme.spacing.lg,
+    ...Platform.select({
+      android: {
+        elevation: 1,
+      },
+      ios: {
+        shadowColor: '#000000',
+        shadowOpacity: 0.03,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 8,
+      },
+    }),
   },
   avatar: {
     backgroundColor: theme.colors.border,

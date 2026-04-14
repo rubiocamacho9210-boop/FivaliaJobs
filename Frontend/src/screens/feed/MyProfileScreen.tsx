@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.md,
   },
   logoutWrap: {
-    color: theme.colors.textSecondary,
+    alignItems: 'center',
     marginTop: theme.spacing.md,
   },
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { AppButton } from '@/components/AppButton';
 import { theme } from '@/constants/theme';
 import { Post } from '@/types/post';
@@ -22,7 +22,7 @@ export function PostCard({
   hideInterestButton = false,
 }: Props) {
   return (
-    <Pressable onPress={onPress} style={styles.card}>
+    <Pressable onPress={onPress} style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}>
       <View style={styles.header}>
         <View style={styles.avatar} />
         <View style={styles.headerTextWrap}>
@@ -67,6 +67,20 @@ const styles = StyleSheet.create({
     gap: theme.spacing.sm,
     marginBottom: theme.spacing.md,
     padding: theme.spacing.md,
+    ...Platform.select({
+      android: {
+        elevation: 1,
+      },
+      ios: {
+        shadowColor: '#000000',
+        shadowOpacity: 0.04,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 8,
+      },
+    }),
+  },
+  cardPressed: {
+    opacity: Platform.OS === 'ios' ? 0.92 : 1,
   },
   header: {
     alignItems: 'center',

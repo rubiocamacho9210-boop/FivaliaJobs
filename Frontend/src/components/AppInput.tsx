@@ -33,9 +33,9 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.xs,
   },
   input: {
-    backgroundColor: theme.colors.surface,
+    backgroundColor: theme.colors.surfaceAlt,
     borderRadius: theme.radius.md,
-    borderWidth: 1,
+    borderWidth: Platform.OS === 'ios' ? 1 : 0,
     borderColor: theme.colors.border,
     color: theme.colors.textPrimary,
     fontSize: theme.text.body,

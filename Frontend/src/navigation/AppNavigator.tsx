@@ -19,9 +19,7 @@ function MainTabsNavigator() {
   return (
     <Tab.Navigator
       screenOptions={{
-        headerShadowVisible: false,
-        headerStyle: { backgroundColor: theme.colors.background },
-        headerTitleStyle: { color: theme.colors.textPrimary, fontWeight: '700' },
+        headerShown: false,
         tabBarActiveTintColor: theme.colors.accent,
         tabBarInactiveTintColor: theme.colors.textSecondary,
         tabBarStyle: {
