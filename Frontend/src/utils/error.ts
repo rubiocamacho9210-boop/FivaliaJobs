@@ -5,6 +5,14 @@ export function getApiErrorMessage(error: unknown): string {
   const axiosError = error as AxiosError<ApiError>;
   const fallback = 'Algo salio mal. Intenta de nuevo.';
 
+  if (axiosError?.code === 'ECONNABORTED') {
+    return 'El servidor tardo demasiado en responder. Intenta de nuevo.';
+  }
+
+  if (!axiosError?.response && axiosError?.request) {
+    return 'No se pudo conectar al servidor. Verifica que el backend este activo y la URL API sea correcta.';
+  }
+
   if (!axiosError?.response?.data) {
     return fallback;
   }
