@@ -125,13 +125,23 @@
 - [x] Errores de API no exponen información del backend
 - [x] Manejo de errores centralizado
 
+#### Pendientes de Seguridad
+- [ ] Rate limiting (throttling)
+- [ ] Account lockout tras intentos fallidos
+- [ ] HTTPS obligatorio en producción
+- [ ] Certificate pinning
+
 ---
 
 ## Historial de Commits
 
 | Fecha | Commit | Descripción |
 |-------|--------|-------------|
-| 2026-04-14 | `xxx` | Seguridad OWASP: CORS, Helmet, secure storage, manejo de errores |
+| 2026-04-14 | `3ee087a` | Seguridad OWASP: CORS, Helmet, secure storage, manejo de errores |
+| 2026-04-14 | `c072af3` | Implementar verificación de email con código de 6 dígitos |
+| 2026-04-14 | `f2f5268` | Implementar polling notifications (sin push) |
+| 2026-04-14 | `f58041b` | Implementar reseñas escritas, reportes y acciones de posts |
+| 2026-04-14 | `079c06f` | Implementar favoritos, follows, search/filter, share |
 | 2026-04-14 | `dac2419` | Agregar campos rating y photoUrl a User y Profile |
 | 2026-04-14 | `3c1d41a` | Agregar rating con estrellas y subida de fotos |
 | 2026-04-14 | `af8c194` | Agregar subida rápida de foto desde Mi Perfil |
@@ -172,6 +182,9 @@ EXPO_PUBLIC_API_BASE_URL=http://localhost:3000
 
 ### Nuevas dependencias
 - `expo-clipboard` - Para copiar enlaces al portapapeles
+- `expo-secure-store` - Almacenamiento seguro de tokens
+- `cors`, `helmet` - Seguridad backend
+- `resend` - Envío de emails
 
 ---
 
