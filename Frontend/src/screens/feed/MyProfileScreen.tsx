@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Alert, FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { Alert, FlatList, Image, Platform, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppButton } from '@/components/AppButton';
@@ -10,7 +11,7 @@ import { PostCard } from '@/components/PostCard';
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { usePostsByUserQuery } from '@/hooks/usePosts';
-import { isProfileNotFoundError, useMyProfileQuery } from '@/hooks/useProfile';
+import { isProfileNotFoundError, useMyProfileQuery, useUpdateProfileMutation } from '@/hooks/useProfile';
 import { AppStackParamList } from '@/navigation/types';
 import { useAuthStore } from '@/store/authStore';
 import { useI18n, Language, ThemeMode } from '@/i18n';
@@ -22,6 +23,7 @@ export function MyProfileScreen() {
   const profileQuery = useMyProfileQuery();
   const postsQuery = usePostsByUserQuery(user?.id ?? '');
   const clearSession = useAuthStore((state) => state.clearSession);
+  const updateMutation = useUpdateProfileMutation();
   const { t, language, themeMode, setLanguage, setThemeMode } = useI18n();
   const { spacing, radius, colors, text } = useTheme();
   const [showLangPicker, setShowLangPicker] = useState(false);
@@ -32,6 +34,69 @@ export function MyProfileScreen() {
       { text: t.common.cancel, style: 'cancel' },
       { text: t.profile.logout, style: 'destructive', onPress: clearSession },
     ]);
+  };
+
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert(t.errors.generic, 'Permission to access camera roll is required!');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets[0]) {
+      try {
+        await updateMutation.mutateAsync({
+          photoUrl: result.assets[0].uri,
+        });
+        profileQuery.refetch();
+      } catch (error) {
+        Alert.alert(t.errors.generic, 'Failed to update photo');
+      }
+    }
+  };
+
+  const takePhoto = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert(t.errors.generic, 'Permission to access camera is required!');
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets[0]) {
+      try {
+        await updateMutation.mutateAsync({
+          photoUrl: result.assets[0].uri,
+        });
+        profileQuery.refetch();
+      } catch (error) {
+        Alert.alert(t.errors.generic, 'Failed to update photo');
+      }
+    }
+  };
+
+  const showPhotoOptions = () => {
+    Alert.alert(
+      t.profile.uploadPhoto,
+      t.profile.choosePhotoOption,
+      [
+        { text: t.profile.takePhoto, onPress: takePhoto },
+        { text: t.profile.chooseFromGallery, onPress: pickImage },
+        { text: t.common.cancel, style: 'cancel' },
+      ]
+    );
   };
 
   const getThemeLabel = (mode: ThemeMode) => {
@@ -94,7 +159,32 @@ export function MyProfileScreen() {
             <Text style={[styles.title, { color: colors.textPrimary, fontSize: text.heading, fontWeight: '700', marginBottom: spacing.md }]}>
               {t.profile.myProfile}
             </Text>
-            {profileQuery.data ? <ProfileHeader profile={profileQuery.data} /> : null}
+            
+            {profileQuery.data ? (
+              <View style={styles.profileSection}>
+                <View style={styles.avatarContainer}>
+                  {profileQuery.data.photoUrl ? (
+                    <Image source={{ uri: profileQuery.data.photoUrl }} style={[styles.avatarImage, { borderRadius: 48 }]} />
+                  ) : (
+                    <View style={[styles.avatarPlaceholder, { backgroundColor: colors.border, borderRadius: 48 }]}>
+                      <Text style={[styles.avatarInitial, { color: colors.textPrimary }]}>
+                        {user?.name?.charAt(0).toUpperCase() ?? 'U'}
+                      </Text>
+                    </View>
+                  )}
+                  <Pressable
+                    onPress={showPhotoOptions}
+                    style={[styles.editPhotoButton, { backgroundColor: colors.accent }]}
+                  >
+                    <Text style={styles.editPhotoIcon}>+</Text>
+                  </Pressable>
+                </View>
+                <Text style={[styles.profileName, { color: colors.textPrimary }]}>{user?.name}</Text>
+                <Text style={[styles.profileRole, { color: colors.textSecondary }]}>
+                  {user?.role === 'WORKER' ? t.register.worker : t.register.client}
+                </Text>
+              </View>
+            ) : null}
 
             {hasNoProfile ? (
               <View style={[styles.block, { marginBottom: spacing.md }]}>
@@ -231,7 +321,6 @@ export function MyProfileScreen() {
 
 const styles = StyleSheet.create({
   title: {},
-  sectionTitle: {},
   list: {},
   block: {},
   blockAction: {},
@@ -252,4 +341,51 @@ const styles = StyleSheet.create({
   },
   option: {},
   optionText: {},
+  sectionTitle: {},
+  profileSection: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  avatarContainer: {
+    position: 'relative',
+    marginBottom: 12,
+  },
+  avatarImage: {
+    width: 96,
+    height: 96,
+  },
+  avatarPlaceholder: {
+    width: 96,
+    height: 96,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatarInitial: {
+    fontSize: 40,
+    fontWeight: '700',
+  },
+  editPhotoButton: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  editPhotoIcon: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontWeight: '700',
+    marginTop: -2,
+  },
+  profileName: {
+    fontSize: 24,
+    fontWeight: '700',
+  },
+  profileRole: {
+    fontSize: 15,
+    marginTop: 2,
+  },
 });
