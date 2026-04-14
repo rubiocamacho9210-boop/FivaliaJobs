@@ -45,6 +45,25 @@ export function MyProfileScreen() {
     }
   };
 
+  const getLanguageLabel = (lang: Language) => {
+    switch (lang) {
+      case 'en':
+        return t.settings.english;
+      case 'es':
+        return t.settings.spanish;
+      case 'fr':
+        return t.settings.french;
+      case 'de':
+        return t.settings.german;
+      case 'pt':
+        return t.settings.portuguese;
+      case 'it':
+        return t.settings.italian;
+    }
+  };
+
+  const languages: Language[] = ['en', 'es', 'fr', 'de', 'pt', 'it'];
+
   if (profileQuery.isLoading) {
     return (
       <ScreenContainer>
@@ -142,7 +161,7 @@ export function MyProfileScreen() {
                     onPress={() => setShowLangPicker(!showLangPicker)}
                   >
                     <Text style={[styles.selectorText, { color: colors.textPrimary, fontSize: text.body }]}>
-                      {language === 'en' ? t.settings.english : t.settings.spanish}
+                      {getLanguageLabel(language)}
                     </Text>
                     <Text style={[styles.selectorArrow, { color: colors.textSecondary }]}>
                       {showLangPicker ? '▲' : '▼'}
@@ -150,7 +169,7 @@ export function MyProfileScreen() {
                   </Pressable>
                   {showLangPicker ? (
                     <View style={[styles.options, { backgroundColor: colors.surface, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, marginTop: spacing.xs }]}>
-                      {(['en', 'es'] as Language[]).map((lang) => (
+                      {languages.map((lang) => (
                         <Pressable
                           key={lang}
                           style={[styles.option, lang === language && { backgroundColor: colors.accentSoft }, { paddingHorizontal: spacing.md, paddingVertical: spacing.sm }]}
@@ -160,7 +179,7 @@ export function MyProfileScreen() {
                           }}
                         >
                           <Text style={[styles.optionText, { color: lang === language ? colors.accent : colors.textPrimary, fontSize: text.body, fontWeight: lang === language ? '600' : '400' }]}>
-                            {lang === 'en' ? t.settings.english : t.settings.spanish}
+                            {getLanguageLabel(lang)}
                           </Text>
                         </Pressable>
                       ))}
