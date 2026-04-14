@@ -80,6 +80,8 @@ export const de = {
   posts: {
     need: 'Ich brauche',
     offer: 'Ich biete',
+    allPosts: 'Alle',
+    searchPosts: 'Beiträge suchen...',
     title: 'Titel',
     titlePlaceholder: 'z.B. Ich brauche ein Logo',
     description: 'Beschreibung',
@@ -119,6 +121,26 @@ export const de = {
     noInterestsDescription: 'Erkunden Sie den Feed und nutzen Sie die Schaltfläche Interessiert mich bei einem Beitrag.',
     subtitle: 'Beiträge, bei denen Sie "Interessiert mich" markiert haben.',
     couldNotLoadInterests: 'Ihre Interessen konnten nicht geladen werden.',
+  },
+  favorites: {
+    title: 'Gespeicherte Beiträge',
+    noFavorites: 'Keine gespeicherten Beiträge',
+    noFavoritesDescription: 'Speichern Sie Beiträge für später.',
+    add: 'Speichern',
+    remove: 'Entfernen',
+  },
+  follows: {
+    following: 'Folge ich',
+    followers: 'Follower',
+    follow: 'Folgen',
+    unfollow: 'Nicht mehr folgen',
+    noFollowing: 'Folgt niemandem',
+    noFollowers: 'Noch keine Follower',
+  },
+  share: {
+    title: 'Teilen',
+    copyLink: 'Link kopieren',
+    linkCopied: 'Link kopiert!',
   },
   errors: {
     generic: 'Etwas ist schief gelaufen.',

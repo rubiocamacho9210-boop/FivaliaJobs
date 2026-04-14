@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Platform, StyleSheet, Text, View } from 'react-native';
+import { Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '@/context/ThemeContext';
 import { useI18n } from '@/i18n';
 import { Profile } from '@/types/profile';
@@ -7,9 +7,17 @@ import { StarRating } from './StarRating';
 
 type Props = {
   profile: Profile;
+  isFollowing?: boolean;
+  onPressFollow?: () => void;
+  followLoading?: boolean;
+  showFollowButton?: boolean;
+  onPressFollowers?: () => void;
+  onPressFollowing?: () => void;
+  followersCount?: number;
+  followingCount?: number;
 };
 
-export function ProfileHeader({ profile }: Props) {
+export function ProfileHeader({ profile, isFollowing = false, onPressFollow, followLoading = false, showFollowButton = false, onPressFollowers, onPressFollowing, followersCount, followingCount }: Props) {
   const { colors, radius, spacing } = useTheme();
   const { t } = useI18n();
   const userName = profile.user?.name ?? t.postCard.user;
@@ -37,6 +45,23 @@ export function ProfileHeader({ profile }: Props) {
         </View>
       )}
 
+      {(followersCount !== undefined || followingCount !== undefined) && (
+        <View style={[styles.statsRow, { marginTop: spacing.sm }]}>
+          {followersCount !== undefined && onPressFollowers && (
+            <Pressable onPress={onPressFollowers} style={styles.statItem}>
+              <Text style={[styles.statCount, { color: colors.textPrimary }]}>{followersCount}</Text>
+              <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t.follows.followers}</Text>
+            </Pressable>
+          )}
+          {followingCount !== undefined && onPressFollowing && (
+            <Pressable onPress={onPressFollowing} style={styles.statItem}>
+              <Text style={[styles.statCount, { color: colors.textPrimary }]}>{followingCount}</Text>
+              <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t.follows.following}</Text>
+            </Pressable>
+          )}
+        </View>
+      )}
+
       {profile.bio ? <Text style={[styles.bio, { color: colors.textSecondary }]}>{profile.bio}</Text> : null}
 
       <View style={styles.metaWrap}>
@@ -44,6 +69,18 @@ export function ProfileHeader({ profile }: Props) {
         {profile.location ? <Text style={[styles.meta, { color: colors.textSecondary }]}>{profile.location}</Text> : null}
         {profile.contact ? <Text style={[styles.meta, { color: colors.textSecondary }]}>{profile.contact}</Text> : null}
       </View>
+
+      {showFollowButton && onPressFollow && (
+        <Pressable
+          onPress={onPressFollow}
+          disabled={followLoading}
+          style={[styles.followButton, { backgroundColor: isFollowing ? colors.surfaceAlt : colors.accent, borderRadius: radius.md, marginTop: spacing.md }]}
+        >
+          <Text style={[styles.followButtonText, { color: isFollowing ? colors.textPrimary : '#FFFFFF' }]}>
+            {isFollowing ? t.follows.unfollow : t.follows.follow}
+          </Text>
+        </Pressable>
+      )}
     </View>
   );
 }
@@ -89,5 +126,27 @@ const styles = StyleSheet.create({
   meta: {
     fontSize: 13,
     marginTop: 2,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    gap: 24,
+  },
+  statItem: {
+    alignItems: 'center',
+  },
+  statCount: {
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  statLabel: {
+    fontSize: 13,
+  },
+  followButton: {
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+  },
+  followButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

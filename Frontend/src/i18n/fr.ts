@@ -80,6 +80,8 @@ export const fr = {
   posts: {
     need: "J'ai besoin",
     offer: 'Je propose',
+    allPosts: 'Tous',
+    searchPosts: 'Rechercher des publications...',
     title: 'Titre',
     titlePlaceholder: 'Ex. J\'ai besoin d\'un logo',
     description: 'Description',
@@ -119,6 +121,26 @@ export const fr = {
     noInterestsDescription: 'Explorez le fil et utilisez le bouton Ça m\'intéresse sur une publication.',
     subtitle: 'Publications où vous avez marqué "Ça m\'intéresse".',
     couldNotLoadInterests: "Nous n'avons pas pu charger vos intérêts.",
+  },
+  favorites: {
+    title: 'Enregistrés',
+    noFavorites: 'Aucune publication enregistrée',
+    noFavoritesDescription: 'Enregistrez les publications pour plus tard.',
+    add: 'Enregistrer',
+    remove: 'Supprimer',
+  },
+  follows: {
+    following: 'Abonnements',
+    followers: 'Abonnés',
+    follow: 'Suivre',
+    unfollow: 'Ne plus suivre',
+    noFollowing: "Vous ne suivez personne",
+    noFollowers: "Pas encore d'abonnés",
+  },
+  share: {
+    title: 'Partager',
+    copyLink: 'Copier le lien',
+    linkCopied: 'Lien copié !',
   },
   errors: {
     generic: "Quelque chose s'est mal passé.",

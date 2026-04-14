@@ -34,9 +34,12 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  profile   Profile?
-  posts     Post[]
-  interests Interest[]
+  profile    Profile?
+  posts      Post[]
+  interests  Interest[]
+  favorites  Favorite[]
+  following  Follow[]   @relation("Following")
+  followers  Follow[]   @relation("Followers")
 }
 
 model Profile {
@@ -68,6 +71,7 @@ model Post {
 
   user      User       @relation(fields: [userId], references: [id])
   interests Interest[]
+  favorites Favorite[]
 }
 
 model Interest {
@@ -81,4 +85,28 @@ model Interest {
   post     Post @relation(fields: [postId], references: [id])
 
   @@unique([fromUserId, postId])
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+
+  @@unique([userId, postId])
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+
+  follower  User @relation("Following", fields: [followerId], references: [id])
+  following User @relation("Followers", fields: [followingId], references: [id])
+
+  @@unique([followerId, followingId])
 }

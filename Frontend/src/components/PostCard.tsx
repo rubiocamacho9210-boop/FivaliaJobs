@@ -5,6 +5,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { Post } from '@/types/post';
 import { useI18n } from '@/i18n';
 import { StarRating } from './StarRating';
+import * as Clipboard from 'expo-clipboard';
 
 type Props = {
   post: Post;
@@ -13,6 +14,10 @@ type Props = {
   onPressInterest?: () => void;
   interestLoading?: boolean;
   hideInterestButton?: boolean;
+  onPressFavorite?: () => void;
+  isFavorite?: boolean;
+  favoriteLoading?: boolean;
+  onPressShare?: () => void;
 };
 
 export function PostCard({
@@ -22,12 +27,25 @@ export function PostCard({
   onPressInterest,
   interestLoading = false,
   hideInterestButton = false,
+  onPressFavorite,
+  isFavorite = false,
+  favoriteLoading = false,
+  onPressShare,
 }: Props) {
   const { colors, radius, spacing } = useTheme();
   const { t } = useI18n();
 
   const userRating = post.user?.rating ?? 0;
   const userRatingCount = post.user?.ratingCount ?? 0;
+
+  const handleShare = async () => {
+    if (onPressShare) {
+      onPressShare();
+    } else {
+      const shareUrl = `fivaliajobs://post/${post.id}`;
+      await Clipboard.setStringAsync(shareUrl);
+    }
+  };
 
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [
@@ -56,6 +74,19 @@ export function PostCard({
               {t.postCard.location}: {post.user.profile.location}
             </Text>
           ) : null}
+        </View>
+
+        <View style={styles.headerActions}>
+          {onPressFavorite && (
+            <Pressable onPress={onPressFavorite} disabled={favoriteLoading} style={styles.iconButton}>
+              <Text style={[styles.iconText, { color: isFavorite ? colors.accent : colors.textSecondary }]}>
+                {isFavorite ? '★' : '☆'}
+              </Text>
+            </Pressable>
+          )}
+          <Pressable onPress={handleShare} style={styles.iconButton}>
+            <Text style={[styles.iconText, { color: colors.textSecondary }]}>↗</Text>
+          </Pressable>
         </View>
       </View>
 
@@ -134,4 +165,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   actions: {},
+  headerActions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  iconButton: {
+    padding: 4,
+  },
+  iconText: {
+    fontSize: 20,
+  },
 });

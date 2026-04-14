@@ -80,6 +80,8 @@ export const en = {
   posts: {
     need: 'Need',
     offer: 'Offer',
+    allPosts: 'All',
+    searchPosts: 'Search posts...',
     title: 'Title',
     titlePlaceholder: 'e.g. Need logo',
     description: 'Description',
@@ -119,6 +121,26 @@ export const en = {
     noInterestsDescription: 'Explore the feed and use the Interested button on a post.',
     subtitle: 'Posts where you marked "Interested".',
     couldNotLoadInterests: 'We could not load your interests.',
+  },
+  favorites: {
+    title: 'Saved Posts',
+    noFavorites: 'No saved posts',
+    noFavoritesDescription: 'Save posts you want to see later.',
+    add: 'Save',
+    remove: 'Remove',
+  },
+  follows: {
+    following: 'Following',
+    followers: 'Followers',
+    follow: 'Follow',
+    unfollow: 'Unfollow',
+    noFollowing: 'Not following anyone',
+    noFollowers: 'No followers yet',
+  },
+  share: {
+    title: 'Share',
+    copyLink: 'Copy link',
+    linkCopied: 'Link copied!',
   },
   errors: {
     generic: 'Something went wrong.',

@@ -6,6 +6,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostStatusDto } from './dto/update-post-status.dto';
+import { PostType, PostStatus } from '@prisma/client';
 
 const MAX_PAGE_LIMIT = 50;
 
@@ -28,6 +29,12 @@ const postAuthorSelect = {
   },
 };
 
+export type PostFilters = {
+  type?: PostType;
+  category?: string;
+  search?: string;
+};
+
 @Injectable()
 export class PostsService {
   constructor(private readonly prisma: PrismaService) {}
@@ -44,13 +51,34 @@ export class PostsService {
     });
   }
 
-  async findAll(page: number, limit: number) {
+  async findAll(page: number, limit: number, filters?: PostFilters) {
     const safePage = Math.max(1, page);
     const safeLimit = Math.min(Math.max(1, limit), MAX_PAGE_LIMIT);
     const skip = (safePage - 1) * safeLimit;
 
+    const where: any = { status: 'ACTIVE' };
+
+    if (filters?.type) {
+      where.type = filters.type;
+    }
+
+    if (filters?.category) {
+      where.category = {
+        contains: filters.category,
+        mode: 'insensitive',
+      };
+    }
+
+    if (filters?.search) {
+      where.OR = [
+        { title: { contains: filters.search, mode: 'insensitive' } },
+        { description: { contains: filters.search, mode: 'insensitive' } },
+        { category: { contains: filters.search, mode: 'insensitive' } },
+      ];
+    }
+
     return this.prisma.post.findMany({
-      where: { status: 'ACTIVE' },
+      where,
       orderBy: { createdAt: 'desc' },
       skip,
       take: safeLimit,

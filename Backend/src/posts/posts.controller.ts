@@ -16,6 +16,7 @@ import { AuthenticatedUser } from '../auth/jwt.strategy';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostStatusDto } from './dto/update-post-status.dto';
+import { PostType } from '@prisma/client';
 
 @Controller('posts')
 export class PostsController {
@@ -34,11 +35,13 @@ export class PostsController {
   findAll(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+    @Query('type') type?: PostType,
+    @Query('category') category?: string,
+    @Query('search') search?: string,
   ) {
-    return this.postsService.findAll(page, limit);
+    return this.postsService.findAll(page, limit, { type, category, search });
   }
 
-  // must be declared before :id to avoid "user" being captured as a param
   @Get('user/:userId')
   findByUserId(@Param('userId') userId: string) {
     return this.postsService.findByUserId(userId);

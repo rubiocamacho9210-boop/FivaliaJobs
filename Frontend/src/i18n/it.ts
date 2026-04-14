@@ -80,6 +80,8 @@ export const it = {
   posts: {
     need: 'Ho bisogno',
     offer: 'Offro',
+    allPosts: 'Tutti',
+    searchPosts: 'Cerca pubblicazioni...',
     title: 'Titolo',
     titlePlaceholder: 'Es. Ho bisogno di un logo',
     description: 'Descrizione',
@@ -119,6 +121,26 @@ export const it = {
     noInterestsDescription: "Esplora il feed e usa il pulsante Mi interessa su un post.",
     subtitle: 'Post dove hai segnato "Mi interessa".',
     couldNotLoadInterests: 'Non è stato possibile caricare i tuoi interessi.',
+  },
+  favorites: {
+    title: 'Pubblicazioni Salvate',
+    noFavorites: 'Nessuna pubblicazione salvata',
+    noFavoritesDescription: 'Salva le pubblicazioni da vedere dopo.',
+    add: 'Salva',
+    remove: 'Rimuovi',
+  },
+  follows: {
+    following: 'Seguiti',
+    followers: 'Follower',
+    follow: 'Segui',
+    unfollow: 'Smetti di seguire',
+    noFollowing: 'Non stai seguendo nessuno',
+    noFollowers: 'Ancora nessun follower',
+  },
+  share: {
+    title: 'Condividi',
+    copyLink: 'Copia link',
+    linkCopied: 'Link copiato!',
   },
   errors: {
     generic: 'Qualcosa è andato storto.',

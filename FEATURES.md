@@ -17,6 +17,9 @@
 - [x] **Ver perfil público** - Ver perfil de otros usuarios
 - [x] **Calificación con estrellas (1-5)** - Sistema de rating estilo Uber/Didi
 - [x] **Contador de calificaciones** - Número de veces calificado
+- [x] **Seguir/Dejar de seguir usuarios** - Botón follow en perfiles públicos
+- [x] **Ver seguidores** - Lista de usuarios que te siguen
+- [x] **Ver siguiendo** - Lista de usuarios que sigues
 
 #### Publicaciones (Posts)
 - [x] **Crear publicación** - Tipo (NEED/OFFER), título, descripción, categoría
@@ -24,6 +27,10 @@
 - [x] **Mis publicaciones** - Lista de publicaciones del usuario
 - [x] **Detalle de publicación** - Información completa del post
 - [x] **Cerrar publicación** - Marcar como cerrada (inactivo)
+- [x] **Buscar publicaciones** - Búsqueda por título/descripción
+- [x] **Filtrar por tipo** - NEED/OFFER/Todos
+- [x] **Guardar favoritos** - Guardar posts para ver después
+- [x] **Compartir publicaciones** - Botón compartir en posts
 
 #### Sistema de Intereses
 - [x] **Marcar interés** - "Me interesa" en publicaciones
@@ -50,6 +57,11 @@
 - [x] **Modelo Profile** - Con photoUrl
 - [x] **Modelo Post** - Publicaciones con tipo y estado
 - [x] **Modelo Interest** - Relaciones de interés
+- [x] **Modelo Favorite** - Guardar posts favoritos
+- [x] **Modelo Follow** - Relaciones de seguimiento
+- [x] **Endpoints de favoritos** - CRUD para favoritos
+- [x] **Endpoints de follows** - Seguir/dejar de seguir usuarios
+- [x] **Filtros en posts** - type, category, search
 
 ---
 
@@ -82,13 +94,7 @@
 
 #### Visibilidad
 - [ ] Búsqueda por categoría/ubicación
-- [ ] Filtrar posts por tipo (NEED/OFFER)
 - [ ] Ordenar por fecha/relevancia
-
-#### Social
-- [ ] Compartir publicaciones
-- [ ] Guardar favoritos
-- [ ] Seguir usuarios
 
 ---
 
@@ -96,6 +102,7 @@
 
 | Fecha | Commit | Descripción |
 |-------|--------|-------------|
+| 2026-04-14 | `xxx` | Implementar favoritos, follows, search/filter, share |
 | 2026-04-14 | `dac2419` | Agregar campos rating y photoUrl a User y Profile |
 | 2026-04-14 | `3c1d41a` | Agregar rating con estrellas y subida de fotos |
 | 2026-04-14 | `af8c194` | Agregar subida rápida de foto desde Mi Perfil |
@@ -121,6 +128,7 @@
 - **Backend**: NestJS + Prisma + PostgreSQL
 - **Estado**: Zustand (i18n, auth, theme)
 - **UI**: Componentes custom con soporte dark mode
+- **Query**: TanStack Query (React Query)
 
 ### Variables de entorno necesarias
 ```
@@ -133,14 +141,16 @@ EXPO_ACCESS_TOKEN=...
 EXPO_PUBLIC_API_BASE_URL=http://localhost:3000
 ```
 
+### Nuevas dependencias
+- `expo-clipboard` - Para copiar enlaces al portapapeles
+
 ---
 
 ## Próximos pasos
 
 1. **Implementar sistema de reseñas** - Permitir calificar con comentario escrito
 2. **Desarrollar chat** - Mensajería en tiempo real entre usuarios
-3. **Agregar filtros de búsqueda** - Por categoría, ubicación, tipo de post
-4. **Sistema de verificación** - Badges de usuario verificado
+3. **Sistema de verificación** - Badges de usuario verificado
 
 ---
 

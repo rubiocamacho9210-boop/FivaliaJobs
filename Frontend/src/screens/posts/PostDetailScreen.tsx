@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AppButton } from '@/components/AppButton';
@@ -7,6 +7,7 @@ import { LoadingState } from '@/components/LoadingState';
 import { PostCard } from '@/components/PostCard';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { useCreateInterestMutation } from '@/hooks/useInterests';
+import { useAddFavoriteMutation, useMyFavoritesQuery, useRemoveFavoriteMutation } from '@/hooks/useFavorites';
 import { usePostDetailQuery } from '@/hooks/usePosts';
 import { AppStackParamList } from '@/navigation/types';
 import { useAuthStore } from '@/store/authStore';
@@ -25,6 +26,14 @@ export function PostDetailScreen({ route, navigation }: Props) {
   const { colors, spacing, radius, text } = useTheme();
   const [interestError, setInterestError] = useState<string | null>(null);
 
+  const { data: favoritesData } = useMyFavoritesQuery();
+  const addFavoriteMutation = useAddFavoriteMutation();
+  const removeFavoriteMutation = useRemoveFavoriteMutation();
+
+  const isFavorite = useMemo(() => {
+    return favoritesData?.some((f) => f.post?.id === postId) ?? false;
+  }, [favoritesData, postId]);
+
   const onPressInterest = async () => {
     if (!post) return;
     setInterestError(null);
@@ -32,6 +41,14 @@ export function PostDetailScreen({ route, navigation }: Props) {
       await createInterestMutation.mutateAsync(post.id);
     } catch (error) {
       setInterestError(getApiErrorMessage(error));
+    }
+  };
+
+  const onPressFavorite = async () => {
+    if (isFavorite) {
+      await removeFavoriteMutation.mutateAsync(postId);
+    } else {
+      await addFavoriteMutation.mutateAsync(postId);
     }
   };
 
@@ -64,6 +81,9 @@ export function PostDetailScreen({ route, navigation }: Props) {
         hideInterestButton={post.userId === user?.id}
         onPressInterest={onPressInterest}
         interestLoading={createInterestMutation.isPending}
+        onPressFavorite={onPressFavorite}
+        isFavorite={isFavorite}
+        favoriteLoading={addFavoriteMutation.isPending || removeFavoriteMutation.isPending}
       />
 
       {interestError ? (

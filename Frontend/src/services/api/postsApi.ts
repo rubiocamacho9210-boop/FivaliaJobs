@@ -1,9 +1,12 @@
 import { api } from '@/services/api/client';
-import { CreatePostRequest, Post } from '@/types/post';
+import { CreatePostRequest, Post, PostType } from '@/types/post';
 
 type PaginationParams = {
   page?: number;
   limit?: number;
+  type?: PostType;
+  category?: string;
+  search?: string;
 };
 
 export async function getPosts(params: PaginationParams = {}): Promise<Post[]> {

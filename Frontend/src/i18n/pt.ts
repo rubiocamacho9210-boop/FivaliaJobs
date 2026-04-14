@@ -80,6 +80,8 @@ export const pt = {
   posts: {
     need: 'Preciso',
     offer: 'Ofereço',
+    allPosts: 'Todos',
+    searchPosts: 'Pesquisar publicações...',
     title: 'Título',
     titlePlaceholder: 'Ex. Preciso de um logo',
     description: 'Descrição',
@@ -119,6 +121,26 @@ export const pt = {
     noInterestsDescription: 'Explore o feed e use o botão Me interessa em uma postagem.',
     subtitle: 'Postagens onde você marcou "Me interessa".',
     couldNotLoadInterests: 'Não foi possível carregar seus interesses.',
+  },
+  favorites: {
+    title: 'Publicações Salvas',
+    noFavorites: 'Nenhuma publicação salva',
+    noFavoritesDescription: 'Salve publicações para ver depois.',
+    add: 'Salvar',
+    remove: 'Remover',
+  },
+  follows: {
+    following: 'Seguindo',
+    followers: 'Seguidores',
+    follow: 'Seguir',
+    unfollow: 'Deixar de seguir',
+    noFollowing: 'Não está seguindo ninguém',
+    noFollowers: 'Ainda sem seguidores',
+  },
+  share: {
+    title: 'Compartilhar',
+    copyLink: 'Copiar link',
+    linkCopied: 'Link copiado!',
   },
   errors: {
     generic: 'Algo deu errado.',

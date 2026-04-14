@@ -9,6 +9,8 @@ export type AppTabParamList = {
   Feed: undefined;
   CreatePost: undefined;
   MyInterests: undefined;
+  MyFavorites: undefined;
+  MyFollowing: undefined;
   MyProfile: undefined;
 };
 
@@ -17,4 +19,5 @@ export type AppStackParamList = {
   PostDetail: { postId: string };
   PublicProfile: { userId: string };
   ProfileSetup: { mode: 'create' | 'edit' };
+  MyFollowers: undefined;
 };

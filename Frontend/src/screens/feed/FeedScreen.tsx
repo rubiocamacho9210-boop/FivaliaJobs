@@ -1,27 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { EmptyState } from '@/components/EmptyState';
 import { ErrorState } from '@/components/ErrorState';
+import { FilterChips } from '@/components/FilterChips';
 import { LoadingState } from '@/components/LoadingState';
 import { PostCard } from '@/components/PostCard';
 import { ScreenContainer } from '@/components/ScreenContainer';
+import { SearchInput } from '@/components/SearchInput';
 import { useCreateInterestMutation } from '@/hooks/useInterests';
+import { useAddFavoriteMutation, useMyFavoritesQuery, useRemoveFavoriteMutation } from '@/hooks/useFavorites';
 import { usePostsQuery } from '@/hooks/usePosts';
 import { AppStackParamList } from '@/navigation/types';
 import { useAuthStore } from '@/store/authStore';
 import { getApiErrorMessage } from '@/utils/error';
 import { theme } from '@/constants/theme';
 import { useI18n } from '@/i18n';
+import { PostType } from '@/types/post';
 
 export function FeedScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const user = useAuthStore((state) => state.user);
-  const { data: posts, isLoading, isError, refetch } = usePostsQuery();
-  const createInterestMutation = useCreateInterestMutation();
   const { t } = useI18n();
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedType, setSelectedType] = useState<PostType | null>(null);
+
+  const { data: posts, isLoading, isError, refetch } = usePostsQuery({
+    type: selectedType ?? undefined,
+    search: searchQuery.trim() || undefined,
+  });
+
+  const { data: favoritesData } = useMyFavoritesQuery();
+  const addFavoriteMutation = useAddFavoriteMutation();
+  const removeFavoriteMutation = useRemoveFavoriteMutation();
+
+  const createInterestMutation = useCreateInterestMutation();
   const [interestError, setInterestError] = useState<string | null>(null);
+
+  const favoritePostIds = useMemo(() => {
+    return new Set(favoritesData?.map((f) => f.post?.id).filter(Boolean) ?? []);
+  }, [favoritesData]);
 
   const onPressInterest = async (postId: string) => {
     setInterestError(null);
@@ -29,6 +49,14 @@ export function FeedScreen() {
       await createInterestMutation.mutateAsync(postId);
     } catch (error) {
       setInterestError(getApiErrorMessage(error));
+    }
+  };
+
+  const onPressFavorite = async (postId: string) => {
+    if (favoritePostIds.has(postId)) {
+      await removeFavoriteMutation.mutateAsync(postId);
+    } else {
+      await addFavoriteMutation.mutateAsync(postId);
     }
   };
 
@@ -40,6 +68,14 @@ export function FeedScreen() {
           {t.auth.welcome.replace('FivaliaJobs', '').trim()}, {user?.name ?? t.postCard.user}.
         </Text>
       </View>
+
+      <SearchInput
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        placeholder={t.posts.searchPosts}
+      />
+
+      <FilterChips selectedType={selectedType} onSelectType={setSelectedType} />
 
       {interestError ? <Text style={styles.error}>{interestError}</Text> : null}
 
@@ -71,6 +107,9 @@ export function FeedScreen() {
               onPressInterest={() => onPressInterest(item.id)}
               interestLoading={createInterestMutation.isPending}
               hideInterestButton={item.userId === user?.id}
+              onPressFavorite={() => onPressFavorite(item.id)}
+              isFavorite={favoritePostIds.has(item.id)}
+              favoriteLoading={addFavoriteMutation.isPending || removeFavoriteMutation.isPending}
             />
           )}
         />
