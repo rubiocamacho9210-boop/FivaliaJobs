@@ -2,17 +2,22 @@ import React from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import { theme } from '@/constants/theme';
 import { Profile } from '@/types/profile';
+import { useI18n } from '@/i18n';
 
 type Props = {
   profile: Profile;
 };
 
 export function ProfileHeader({ profile }: Props) {
+  const { t } = useI18n();
+  const userName = profile.user?.name ?? t.postCard.user;
+  const userRole = profile.user?.role ?? 'WORKER';
+
   return (
     <View style={styles.container}>
       <View style={styles.avatar} />
-      <Text style={styles.name}>{profile.user.name}</Text>
-      <Text style={styles.role}>{profile.user.role === 'WORKER' ? 'Trabajador' : 'Cliente'}</Text>
+      <Text style={styles.name}>{userName}</Text>
+      <Text style={styles.role}>{userRole === 'WORKER' ? t.register.worker : t.register.client}</Text>
 
       {profile.bio ? <Text style={styles.bio}>{profile.bio}</Text> : null}
 
