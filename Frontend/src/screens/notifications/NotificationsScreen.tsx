@@ -7,7 +7,7 @@ import { ErrorState } from '@/components/ErrorState';
 import { LoadingState } from '@/components/LoadingState';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { theme } from '@/constants/theme';
-import { useNotificationsQuery } from '@/hooks/useNotifications';
+import { Notification, useNotificationsQuery } from '@/hooks/useNotifications';
 import { AppStackParamList } from '@/navigation/types';
 import { useI18n } from '@/i18n';
 import { useTheme } from '@/context/ThemeContext';
@@ -18,7 +18,7 @@ export function NotificationsScreen() {
   const { colors, radius, spacing } = useTheme();
   const notificationsQuery = useNotificationsQuery();
 
-  const handlePress = (notification: any) => {
+  const handlePress = (notification: Notification) => {
     if (notification.type === 'INTEREST' || notification.type === 'REVIEW') {
       if (notification.data?.postId) {
         navigation.navigate('PostDetail', { postId: notification.data.postId });

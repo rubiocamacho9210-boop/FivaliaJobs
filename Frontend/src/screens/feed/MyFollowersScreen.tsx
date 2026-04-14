@@ -8,7 +8,7 @@ import { LoadingState } from '@/components/LoadingState';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { StarRating } from '@/components/StarRating';
 import { theme } from '@/constants/theme';
-import { useFollowMutation, useFollowersQuery, useUnfollowMutation } from '@/hooks/useFollows';
+import { useFollowersQuery } from '@/hooks/useFollows';
 import { AppStackParamList } from '@/navigation/types';
 import { useI18n } from '@/i18n';
 import { useTheme } from '@/context/ThemeContext';
@@ -18,17 +18,6 @@ export function MyFollowersScreen() {
   const { t } = useI18n();
   const { colors, spacing, radius } = useTheme();
   const followersQuery = useFollowersQuery();
-  const followMutation = useFollowMutation();
-  const unfollowMutation = useUnfollowMutation();
-
-  const onPressFollow = async (userId: string, isFollowing: boolean) => {
-    if (isFollowing) {
-      await unfollowMutation.mutateAsync(userId);
-    } else {
-      await followMutation.mutateAsync(userId);
-    }
-  };
-
   return (
     <ScreenContainer>
       <Text style={[styles.title, { color: colors.textPrimary }]}>{t.follows.followers}</Text>

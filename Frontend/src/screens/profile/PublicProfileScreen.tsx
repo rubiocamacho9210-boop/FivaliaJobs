@@ -27,8 +27,8 @@ export function PublicProfileScreen({ route, navigation }: Props) {
 
   const { data: followingData } = useFollowingQuery();
   const { data: followCounts } = useFollowCountsQuery();
-  const followMutation = useUnfollowMutation();
-  const unfollowMutation = useFollowMutation();
+  const followMutation = useFollowMutation();
+  const unfollowMutation = useUnfollowMutation();
 
   const isOwnProfile = currentUser?.id === userId;
   const isFollowing = useMemo(() => {
@@ -99,7 +99,7 @@ export function PublicProfileScreen({ route, navigation }: Props) {
               followersCount={followCounts?.followers}
               followingCount={followCounts?.following}
               onPressFollowers={() => navigation.navigate('MyFollowers')}
-              onPressFollowing={() => navigation.navigate('MainTabs', { screen: 'MyFollowing' } as any)}
+              onPressFollowing={() => navigation.navigate('MyFollowing')}
             />
             <Text style={styles.listTitle}>{t.profile.publications}</Text>
             {postsQuery.isLoading ? <LoadingState /> : null}
