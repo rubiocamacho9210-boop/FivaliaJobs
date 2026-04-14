@@ -6,6 +6,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostStatusDto } from './dto/update-post-status.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 import { PostType, PostStatus } from '@prisma/client';
 
 const MAX_PAGE_LIMIT = 50;
@@ -33,6 +34,7 @@ export type PostFilters = {
   type?: PostType;
   category?: string;
   search?: string;
+  location?: string;
 };
 
 @Injectable()
@@ -75,6 +77,17 @@ export class PostsService {
         { description: { contains: filters.search, mode: 'insensitive' } },
         { category: { contains: filters.search, mode: 'insensitive' } },
       ];
+    }
+
+    if (filters?.location) {
+      where.user = {
+        profile: {
+          location: {
+            contains: filters.location,
+            mode: 'insensitive',
+          },
+        },
+      };
     }
 
     return this.prisma.post.findMany({
@@ -121,5 +134,47 @@ export class PostsService {
       where: { id: postId },
       data: { status: dto.status },
     });
+  }
+
+  async updatePost(postId: string, requestingUserId: string, dto: UpdatePostDto) {
+    const post = await this.prisma.post.findUnique({ where: { id: postId } });
+
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+
+    if (post.userId !== requestingUserId) {
+      throw new ForbiddenException('You can only update your own posts');
+    }
+
+    if (post.status !== 'ACTIVE') {
+      throw new ForbiddenException('You can only update active posts');
+    }
+
+    return this.prisma.post.update({
+      where: { id: postId },
+      data: {
+        ...(dto.type && { type: dto.type }),
+        ...(dto.title && { title: dto.title }),
+        ...(dto.description && { description: dto.description }),
+        ...(dto.category && { category: dto.category }),
+      },
+    });
+  }
+
+  async deletePost(postId: string, requestingUserId: string) {
+    const post = await this.prisma.post.findUnique({ where: { id: postId } });
+
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+
+    if (post.userId !== requestingUserId) {
+      throw new ForbiddenException('You can only delete your own posts');
+    }
+
+    await this.prisma.post.delete({ where: { id: postId } });
+
+    return { success: true };
   }
 }

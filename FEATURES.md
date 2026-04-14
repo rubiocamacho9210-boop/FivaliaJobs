@@ -26,11 +26,20 @@
 - [x] **Feed principal** - Ver todas las publicaciones activas
 - [x] **Mis publicaciones** - Lista de publicaciones del usuario
 - [x] **Detalle de publicación** - Información completa del post
-- [x] **Cerrar publicación** - Marcar como cerrada (inactivo)
+- [x] **Cerrar/reabrir publicación** - Marcar como cerrada o reabrir
+- [x] **Editar publicación** - Modificar datos del post
+- [x] **Eliminar publicación** - Borrar post
 - [x] **Buscar publicaciones** - Búsqueda por título/descripción
 - [x] **Filtrar por tipo** - NEED/OFFER/Todos
+- [x] **Filtrar por ubicación** - Por ciudad/ubicación del usuario
 - [x] **Guardar favoritos** - Guardar posts para ver después
 - [x] **Compartir publicaciones** - Botón compartir en posts
+
+#### Reseñas y Calificaciones
+- [x] **Reseñas escritas** - Comentarios con estrellas (1-5)
+- [x] **Sistema de reseñas** - Después de cerrar un post
+- [x] **Ver reseñas de usuarios** - Lista de reseñas recibidas
+- [x] **Actualizar rating** - Promedio de calificaciones actualizado
 
 #### Sistema de Intereses
 - [x] **Marcar interés** - "Me interesa" en publicaciones
@@ -59,9 +68,14 @@
 - [x] **Modelo Interest** - Relaciones de interés
 - [x] **Modelo Favorite** - Guardar posts favoritos
 - [x] **Modelo Follow** - Relaciones de seguimiento
+- [x] **Modelo Review** - Reseñas con comentarios
+- [x] **Modelo Report** - Reportes de usuarios/posts
 - [x] **Endpoints de favoritos** - CRUD para favoritos
 - [x] **Endpoints de follows** - Seguir/dejar de seguir usuarios
-- [x] **Filtros en posts** - type, category, search
+- [x] **Endpoints de reseñas** - Crear y ver reseñas
+- [x] **Endpoints de reportes** - Reportar usuarios/posts
+- [x] **Filtros en posts** - type, category, search, location
+- [x] **CRUD de posts** - Editar y eliminar publicaciones
 
 ---
 
@@ -72,11 +86,6 @@
 
 ### 📋 Para hacer
 
-#### Calificaciones y reseñas
-- [ ] Sistema para calificar después de contratar/completar servicio
-- [ ] Reseñas escritas por usuarios
-- [ ] Ver todas las reseñas de un usuario
-
 #### Mensajería/Chat
 - [ ] Chat interno entre usuarios
 - [ ] Notificaciones de mensajes
@@ -85,7 +94,6 @@
 #### Seguridad/Confianza
 - [ ] Verificar email/teléfono
 - [ ] Badges de verificación
-- [ ] Reportar usuarios
 
 #### Monetización
 - [ ] Suscripciones premium
@@ -93,7 +101,6 @@
 - [ ] Comisión por transacción
 
 #### Visibilidad
-- [ ] Búsqueda por categoría/ubicación
 - [ ] Ordenar por fecha/relevancia
 
 ---
@@ -102,7 +109,7 @@
 
 | Fecha | Commit | Descripción |
 |-------|--------|-------------|
-| 2026-04-14 | `xxx` | Implementar favoritos, follows, search/filter, share |
+| 2026-04-14 | `xxx` | Implementar reseñas escritas, reportes y acciones de posts |
 | 2026-04-14 | `dac2419` | Agregar campos rating y photoUrl a User y Profile |
 | 2026-04-14 | `3c1d41a` | Agregar rating con estrellas y subida de fotos |
 | 2026-04-14 | `af8c194` | Agregar subida rápida de foto desde Mi Perfil |

@@ -9,4 +9,6 @@ export const queryKeys = {
   following: ['follows', 'following'] as const,
   followers: ['follows', 'followers'] as const,
   followCounts: ['follows', 'counts'] as const,
+  reviews: ['reviews'] as const,
+  reviewsForUser: (userId: string) => ['reviews', 'user', userId] as const,
 };

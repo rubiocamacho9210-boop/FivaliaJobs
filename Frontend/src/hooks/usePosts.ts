@@ -7,6 +7,7 @@ export type PostFilters = {
   type?: PostType;
   category?: string;
   search?: string;
+  location?: string;
 };
 
 export function usePostsQuery(filters?: PostFilters) {

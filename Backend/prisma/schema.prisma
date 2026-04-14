@@ -31,15 +31,19 @@ model User {
   birthDate    DateTime
   rating       Float    @default(0)
   ratingCount  Int      @default(0)
+  emailVerified Boolean  @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  profile    Profile?
-  posts      Post[]
-  interests  Interest[]
-  favorites  Favorite[]
-  following  Follow[]   @relation("Following")
-  followers  Follow[]   @relation("Followers")
+  profile     Profile?
+  posts       Post[]
+  interests   Interest[]
+  favorites   Favorite[]
+  following   Follow[]   @relation("Following")
+  followers   Follow[]   @relation("Followers")
+  reviewsGiven   Review[] @relation("ReviewsGiven")
+  reviewsReceived Review[] @relation("ReviewsReceived")
+  reports       Report[]   @relation("ReportsFiled")
 }
 
 model Profile {
@@ -72,6 +76,7 @@ model Post {
   user      User       @relation(fields: [userId], references: [id])
   interests Interest[]
   favorites Favorite[]
+  reviews   Review[]
 }
 
 model Interest {
@@ -109,4 +114,54 @@ model Follow {
   following User @relation("Followers", fields: [followingId], references: [id])
 
   @@unique([followerId, followingId])
+}
+
+enum ReviewType {
+  WORKER_REVIEW
+  CLIENT_REVIEW
+}
+
+model Review {
+  id         String     @id @default(cuid())
+  fromUserId String
+  toUserId   String
+  postId     String
+  rating     Int
+  comment    String?
+  type       ReviewType
+  createdAt  DateTime   @default(now())
+
+  fromUser User @relation("ReviewsGiven", fields: [fromUserId], references: [id])
+  toUser   User @relation("ReviewsReceived", fields: [toUserId], references: [id])
+  post     Post @relation(fields: [postId], references: [id])
+
+  @@unique([fromUserId, postId])
+}
+
+enum ReportType {
+  REPORT_USER
+  REPORT_POST
+}
+
+enum ReportReason {
+  SPAM
+  HARASSMENT
+  INAPPROPRIATE
+  FAKE
+  OTHER
+}
+
+model Report {
+  id        String       @id @default(cuid())
+  fromUserId String
+  targetType ReportType
+  targetId  String
+  reason    ReportReason
+  details   String?
+  status    String       @default("PENDING")
+  createdAt DateTime     @default(now())
+
+  fromUser User @relation("ReportsFiled", fields: [fromUserId], references: [id])
+
+  @@unique([fromUserId, targetType, targetId])
 }

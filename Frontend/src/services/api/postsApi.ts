@@ -7,6 +7,7 @@ type PaginationParams = {
   type?: PostType;
   category?: string;
   search?: string;
+  location?: string;
 };
 
 export async function getPosts(params: PaginationParams = {}): Promise<Post[]> {
