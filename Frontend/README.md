@@ -50,6 +50,7 @@ Opciones:
 npm run ios
 npm run android
 npm run typecheck
+npm run qa:smoke
 ```
 
 ## Funcionalidad MVP actual
