@@ -98,10 +98,6 @@
 - [ ] Chat interno entre usuarios
 - [ ] Historial de conversaciones
 
-#### Seguridad/Confianza
-- [x] **Verificar email** - Código de 6 dígitos enviado por email
-- [x] **Badge de verificación** - Muestra "Email verificado" en perfil
-
 #### Monetización
 - [ ] Suscripciones premium
 - [ ] Cobro por publicación destacada
@@ -112,11 +108,30 @@
 
 ---
 
+## Seguridad OWASP Implementada
+
+#### Backend
+- [x] CORS configurado
+- [x] Helmet para headers de seguridad
+- [x] Tokens JWT seguros
+- [x] Password hashing con bcrypt
+- [x] Validación de inputs con class-validator
+- [x] Manejo de errores genéricos (no exponen stack traces)
+- [x] Sanitización de datos en emails
+- [x] Verificación de email obligatoria
+
+#### Frontend
+- [x] Almacenamiento seguro de tokens (expo-secure-store)
+- [x] Errores de API no exponen información del backend
+- [x] Manejo de errores centralizado
+
+---
+
 ## Historial de Commits
 
 | Fecha | Commit | Descripción |
 |-------|--------|-------------|
-| 2026-04-14 | `xxx` | Implementar polling notifications (sin push) |
+| 2026-04-14 | `xxx` | Seguridad OWASP: CORS, Helmet, secure storage, manejo de errores |
 | 2026-04-14 | `dac2419` | Agregar campos rating y photoUrl a User y Profile |
 | 2026-04-14 | `3c1d41a` | Agregar rating con estrellas y subida de fotos |
 | 2026-04-14 | `af8c194` | Agregar subida rápida de foto desde Mi Perfil |

@@ -77,6 +77,8 @@ export class EmailVerificationService {
     const { Resend } = await import('resend');
     const resend = new Resend(process.env.RESEND_API_KEY);
 
+    const sanitizedName = name.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
     try {
       await resend.emails.send({
         from: process.env.EMAIL_FROM || 'FivaliaJobs <noreply@fivaliajobs.com>',
@@ -85,7 +87,7 @@ export class EmailVerificationService {
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h1 style="color: #6366f1;">Welcome to FivaliaJobs!</h1>
-            <p>Hi ${name},</p>
+            <p>Hi ${sanitizedName},</p>
             <p>Your verification code is:</p>
             <div style="background: #f3f4f6; padding: 20px; text-align: center; font-size: 32px; letter-spacing: 8px; border-radius: 8px; margin: 20px 0;">
               <strong>${code}</strong>
@@ -96,8 +98,10 @@ export class EmailVerificationService {
         `,
       });
     } catch (error) {
-      console.error('Failed to send verification email:', error);
-      console.log(`[DEV] Verification code for ${email}: ${code}`);
+      console.error('Failed to send verification email');
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`[DEV] Verification code for ${email}: ${code}`);
+      }
     }
   }
 }
