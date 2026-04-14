@@ -7,6 +7,7 @@ export type AuthUser = {
   role: UserRole;
   rating: number;
   ratingCount: number;
+  emailVerified: boolean;
 };
 
 export type LoginRequest = {

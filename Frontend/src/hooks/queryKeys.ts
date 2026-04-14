@@ -11,4 +11,6 @@ export const queryKeys = {
   followCounts: ['follows', 'counts'] as const,
   reviews: ['reviews'] as const,
   reviewsForUser: (userId: string) => ['reviews', 'user', userId] as const,
+  notifications: ['notifications'] as const,
+  notificationsCount: ['notifications', 'count'] as const,
 };

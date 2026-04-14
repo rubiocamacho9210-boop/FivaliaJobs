@@ -1,6 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { secureStorage } from '@/services/secureStorage';
 import { AuthUser } from '@/types/auth';
 
 type AuthState = {
@@ -9,36 +8,67 @@ type AuthState = {
   needsProfileSetup: boolean;
   hasHydrated: boolean;
   setSession: (token: string, user: AuthUser) => void;
+  setUser: (user: Partial<AuthUser>) => void;
   setNeedsProfileSetup: (value: boolean) => void;
   clearSession: () => void;
   setHasHydrated: (value: boolean) => void;
+  hydrate: () => Promise<void>;
 };
 
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set) => ({
-      token: null,
-      user: null,
-      needsProfileSetup: false,
-      hasHydrated: false,
-      setSession: (token, user) => set({ token, user }),
-      setNeedsProfileSetup: (value) => set({ needsProfileSetup: value }),
-      clearSession: () => set({ token: null, user: null, needsProfileSetup: false }),
-      setHasHydrated: (value) => set({ hasHydrated: value }),
-    }),
-    {
-      name: 'fivalia-auth',
-      storage: createJSONStorage(() => AsyncStorage),
-      partialize: (state) => ({
-        token: state.token,
-        user: state.user,
-        needsProfileSetup: state.needsProfileSetup,
-      }),
-      onRehydrateStorage: () => (state) => {
-        state?.setHasHydrated(true);
-      },
-    },
-  ),
-);
+export const useAuthStore = create<AuthState>()((set, get) => ({
+  token: null,
+  user: null,
+  needsProfileSetup: false,
+  hasHydrated: false,
+  
+  setSession: async (token, user) => {
+    await secureStorage.setToken(token);
+    await secureStorage.setUser(JSON.stringify(user));
+    await secureStorage.setNeedsProfileSetup(false);
+    set({ token, user, needsProfileSetup: false });
+  },
+  
+  setUser: async (userUpdate) => {
+    const currentUser = get().user;
+    if (currentUser) {
+      const updatedUser = { ...currentUser, ...userUpdate };
+      await secureStorage.setUser(JSON.stringify(updatedUser));
+      set({ user: updatedUser });
+    }
+  },
+  
+  setNeedsProfileSetup: async (value) => {
+    await secureStorage.setNeedsProfileSetup(value);
+    set({ needsProfileSetup: value });
+  },
+  
+  clearSession: async () => {
+    await secureStorage.clearAll();
+    set({ token: null, user: null, needsProfileSetup: false });
+  },
+  
+  setHasHydrated: (value) => set({ hasHydrated: value }),
+  
+  hydrate: async () => {
+    try {
+      const [token, userJson, needsProfile] = await Promise.all([
+        secureStorage.getToken(),
+        secureStorage.getUser(),
+        secureStorage.getNeedsProfileSetup(),
+      ]);
+      
+      const user = userJson ? JSON.parse(userJson) : null;
+      set({
+        token,
+        user,
+        needsProfileSetup: needsProfile,
+        hasHydrated: true,
+      });
+    } catch (error) {
+      console.error('Failed to hydrate auth state');
+      set({ hasHydrated: true });
+    }
+  },
+}));
 
 export const authStore = useAuthStore;

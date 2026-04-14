@@ -32,6 +32,10 @@ model User {
   rating       Float    @default(0)
   ratingCount  Int      @default(0)
   emailVerified Boolean  @default(false)
+  emailVerificationCode   String?
+  emailVerificationExpiry DateTime?
+  failedLoginAttempts Int      @default(0)
+  lockedUntil         DateTime?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 

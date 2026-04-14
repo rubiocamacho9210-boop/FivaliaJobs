@@ -10,6 +10,8 @@ export const lightColors = {
   accent: Platform.select({ ios: '#007AFF', android: '#0B57D0', default: '#0B57D0' }),
   accentSoft: Platform.select({ ios: '#EAF2FF', android: '#E8F0FE', default: '#E8F0FE' }),
   danger: '#B42318',
+  success: '#0D7624',
+  warning: '#B45309',
 };
 
 export const darkColors = {
@@ -22,6 +24,8 @@ export const darkColors = {
   accent: '#9B59B6',
   accentSoft: '#3D2A4D',
   danger: '#E74C3C',
+  success: '#2ECC71',
+  warning: '#F39C12',
 };
 
 export const spacing = {
