@@ -105,3 +105,10 @@ gh pr create \
   --title "feat: mobile frontend MVP integration" \
   --body "Mobile MVP frontend based on Pencil wireframes, integrated with backend auth/posts/profile/interests."
 ```
+
+## QA y entrega
+
+- Checklist manual:
+  - `docs/QA_CHECKLIST.md`
+- Notas de release:
+  - `docs/RELEASE_NOTES_MVP.md`
