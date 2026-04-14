@@ -28,7 +28,6 @@ export function PostCard({
 
   const userRating = post.user?.rating ?? 0;
   const userRatingCount = post.user?.ratingCount ?? 0;
-  const showRating = userRatingCount > 0 && post.user?.role === 'WORKER';
 
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [
@@ -47,7 +46,7 @@ export function PostCard({
             <Pressable disabled={!onPressAuthor} onPress={onPressAuthor}>
               <Text style={[styles.author, { color: colors.textPrimary }]}>{post.user?.name ?? t.postCard.user}</Text>
             </Pressable>
-            {showRating && (
+            {userRatingCount > 0 && (
               <StarRating rating={userRating} ratingCount={userRatingCount} size="small" />
             )}
           </View>

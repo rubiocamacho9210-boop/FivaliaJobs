@@ -31,7 +31,7 @@ export function ProfileHeader({ profile }: Props) {
       <Text style={[styles.name, { color: colors.textPrimary }]}>{userName}</Text>
       <Text style={[styles.role, { color: colors.textSecondary }]}>{userRole === 'WORKER' ? t.register.worker : t.register.client}</Text>
 
-      {userRole === 'WORKER' && userRatingCount > 0 && (
+      {userRatingCount > 0 && (
         <View style={[styles.ratingContainer, { marginTop: spacing.xs }]}>
           <StarRating rating={userRating} ratingCount={userRatingCount} size="small" />
         </View>
