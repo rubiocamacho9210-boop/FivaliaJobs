@@ -1,9 +1,10 @@
 import React from 'react';
-import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { AppButton } from '@/components/AppButton';
 import { useTheme } from '@/context/ThemeContext';
 import { Post } from '@/types/post';
 import { useI18n } from '@/i18n';
+import { StarRating } from './StarRating';
 
 type Props = {
   post: Post;
@@ -25,6 +26,9 @@ export function PostCard({
   const { colors, radius, spacing } = useTheme();
   const { t } = useI18n();
 
+  const userRating = post.user?.rating ?? 0;
+  const userRatingCount = post.user?.ratingCount ?? 0;
+
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [
       styles.card,
@@ -32,11 +36,20 @@ export function PostCard({
       Platform.OS === 'ios' && pressed && { opacity: 0.92 },
     ]}>
       <View style={[styles.header, { gap: spacing.sm }]}>
-        <View style={[styles.avatar, { backgroundColor: colors.border }]} />
+        {post.user?.profile?.photoUrl ? (
+          <Image source={{ uri: post.user.profile.photoUrl }} style={[styles.avatar, { borderRadius: 16 }]} />
+        ) : (
+          <View style={[styles.avatar, { backgroundColor: colors.border, borderRadius: 16 }]} />
+        )}
         <View style={styles.headerTextWrap}>
-          <Pressable disabled={!onPressAuthor} onPress={onPressAuthor}>
-            <Text style={[styles.author, { color: colors.textPrimary }]}>{post.user?.name ?? t.postCard.user}</Text>
-          </Pressable>
+          <View style={styles.authorRow}>
+            <Pressable disabled={!onPressAuthor} onPress={onPressAuthor}>
+              <Text style={[styles.author, { color: colors.textPrimary }]}>{post.user?.name ?? t.postCard.user}</Text>
+            </Pressable>
+            {userRatingCount > 0 && (
+              <StarRating rating={userRating} ratingCount={userRatingCount} size="small" />
+            )}
+          </View>
           <Text style={[styles.category, { color: colors.textSecondary }]}>{post.category}</Text>
           {post.user?.profile?.location ? (
             <Text style={[styles.location, { color: colors.textSecondary }]}>
@@ -80,12 +93,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   avatar: {
-    borderRadius: 16,
     height: 32,
     width: 32,
   },
   headerTextWrap: {
     flex: 1,
+  },
+  authorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   author: {
     fontSize: 13,
@@ -117,5 +134,4 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   actions: {},
-  interestButton: {},
 });
