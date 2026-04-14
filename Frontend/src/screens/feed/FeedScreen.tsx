@@ -1,13 +1,34 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { EmptyState } from '@/components/EmptyState';
+import { ErrorState } from '@/components/ErrorState';
+import { LoadingState } from '@/components/LoadingState';
+import { PostCard } from '@/components/PostCard';
 import { ScreenContainer } from '@/components/ScreenContainer';
-import { AppButton } from '@/components/AppButton';
+import { useCreateInterestMutation } from '@/hooks/useInterests';
+import { usePostsQuery } from '@/hooks/usePosts';
+import { AppStackParamList } from '@/navigation/types';
 import { useAuthStore } from '@/store/authStore';
+import { getApiErrorMessage } from '@/utils/error';
 import { theme } from '@/constants/theme';
 
 export function FeedScreen() {
+  const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const user = useAuthStore((state) => state.user);
-  const clearSession = useAuthStore((state) => state.clearSession);
+  const { data: posts, isLoading, isError, refetch } = usePostsQuery();
+  const createInterestMutation = useCreateInterestMutation();
+  const [interestError, setInterestError] = useState<string | null>(null);
+
+  const onPressInterest = async (postId: string) => {
+    setInterestError(null);
+    try {
+      await createInterestMutation.mutateAsync(postId);
+    } catch (error) {
+      setInterestError(getApiErrorMessage(error));
+    }
+  };
 
   return (
     <ScreenContainer>
@@ -16,15 +37,37 @@ export function FeedScreen() {
         <Text style={styles.subtitle}>Hola, {user?.name ?? 'usuario'}.</Text>
       </View>
 
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Auth integrado</Text>
-        <Text style={styles.cardBody}>
-          Ya estas autenticado y esta pantalla se muestra despues de login/register.
-        </Text>
-        <Text style={styles.cardBody}>Siguiente paso: conectar listado real de /posts.</Text>
-      </View>
+      {interestError ? <Text style={styles.error}>{interestError}</Text> : null}
 
-      <AppButton label="Cerrar sesion" variant="secondary" onPress={clearSession} />
+      {isLoading ? <LoadingState /> : null}
+      {isError ? <ErrorState message="No pudimos cargar el feed." onRetry={refetch} /> : null}
+
+      {!isLoading && !isError && (posts?.length ?? 0) === 0 ? (
+        <EmptyState title="Sin publicaciones" description="Todavia no hay posts activos." />
+      ) : null}
+
+      {!isLoading && !isError && posts ? (
+        <FlatList
+          data={posts}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <PostCard
+              post={item}
+              onPress={() => navigation.navigate('PostDetail', { postId: item.id })}
+              onPressAuthor={() => {
+                if (item.user?.id) {
+                  navigation.navigate('PublicProfile', { userId: item.user.id });
+                }
+              }}
+              onPressInterest={() => onPressInterest(item.id)}
+              interestLoading={createInterestMutation.isPending}
+              hideInterestButton={item.userId === user?.id}
+            />
+          )}
+        />
+      ) : null}
     </ScreenContainer>
   );
 }
@@ -42,22 +85,11 @@ const styles = StyleSheet.create({
     color: theme.colors.textSecondary,
     fontSize: theme.text.body,
   },
-  card: {
-    backgroundColor: theme.colors.surface,
-    borderColor: theme.colors.border,
-    borderRadius: theme.radius.lg,
-    borderWidth: 1,
-    gap: theme.spacing.xs,
-    marginBottom: theme.spacing.lg,
-    padding: theme.spacing.md,
+  listContent: {
+    paddingBottom: theme.spacing.xl,
   },
-  cardTitle: {
-    color: theme.colors.textPrimary,
-    fontSize: theme.text.title,
-    fontWeight: '700',
-  },
-  cardBody: {
-    color: theme.colors.textSecondary,
-    fontSize: theme.text.body,
+  error: {
+    color: theme.colors.danger,
+    marginBottom: theme.spacing.md,
   },
 });
