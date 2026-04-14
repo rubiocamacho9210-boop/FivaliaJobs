@@ -1,6 +1,6 @@
 import React from 'react';
 import { Platform, StyleSheet, Text, TextInput, TextInputProps, View } from 'react-native';
-import { theme } from '@/constants/theme';
+import { useTheme } from '@/context/ThemeContext';
 
 type Props = TextInputProps & {
   label: string;
@@ -8,42 +8,44 @@ type Props = TextInputProps & {
 };
 
 export function AppInput({ label, error, style, ...props }: Props) {
+  const { colors, spacing, radius, text } = useTheme();
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+    <View style={[styles.container, { marginBottom: spacing.md }]}>
+      <Text style={[styles.label, { color: colors.textSecondary, fontSize: text.caption, marginBottom: spacing.xs }]}>
+        {label}
+      </Text>
       <TextInput
         {...props}
         autoCapitalize={props.autoCapitalize ?? 'none'}
-        placeholderTextColor={theme.colors.textSecondary}
-        style={[styles.input, style]}
+        placeholderTextColor={colors.textSecondary}
+        style={[
+          styles.input,
+          {
+            backgroundColor: colors.surfaceAlt,
+            borderRadius: radius.md,
+            borderWidth: Platform.OS === 'ios' ? 1 : 0,
+            borderColor: colors.border,
+            color: colors.textPrimary,
+            fontSize: text.body,
+            minHeight: Platform.select({ ios: 50, android: 56, default: 56 }),
+            paddingHorizontal: spacing.md,
+          },
+          style,
+        ]}
       />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <Text style={[styles.error, { color: colors.danger }]}>{error}</Text> : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: theme.spacing.md,
-  },
+  container: {},
   label: {
-    color: theme.colors.textSecondary,
-    fontSize: theme.text.caption,
     fontWeight: Platform.select({ ios: '600', android: '500', default: '500' }),
-    marginBottom: theme.spacing.xs,
   },
-  input: {
-    backgroundColor: theme.colors.surfaceAlt,
-    borderRadius: theme.radius.md,
-    borderWidth: Platform.OS === 'ios' ? 1 : 0,
-    borderColor: theme.colors.border,
-    color: theme.colors.textPrimary,
-    fontSize: theme.text.body,
-    minHeight: Platform.select({ ios: 50, android: 56, default: 56 }),
-    paddingHorizontal: theme.spacing.md,
-  },
+  input: {},
   error: {
-    color: theme.colors.danger,
     fontSize: 12,
     marginTop: 6,
   },

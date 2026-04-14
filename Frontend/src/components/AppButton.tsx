@@ -7,7 +7,7 @@ import {
   Text,
   ViewStyle,
 } from 'react-native';
-import { theme } from '@/constants/theme';
+import { useTheme } from '@/context/ThemeContext';
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost';
 
@@ -28,6 +28,7 @@ export function AppButton({
   variant = 'primary',
   style,
 }: Props) {
+  const { colors, radius, spacing } = useTheme();
   const isDisabled = disabled || loading;
   const isGhost = variant === 'ghost';
   const isSecondary = variant === 'secondary';
@@ -36,10 +37,11 @@ export function AppButton({
     <Pressable
       onPress={onPress}
       disabled={isDisabled}
-      android_ripple={{ color: 'rgba(11,87,208,0.14)' }}
+      android_ripple={{ color: `${colors.accent}24` }}
       style={({ pressed }) => [
         styles.base,
-        isSecondary && styles.secondary,
+        { backgroundColor: colors.accent, borderRadius: radius.lg, paddingHorizontal: spacing.lg },
+        isSecondary && { backgroundColor: colors.accentSoft },
         isGhost && styles.ghost,
         isDisabled && styles.disabled,
         Platform.OS === 'ios' && pressed && styles.iosPressed,
@@ -47,9 +49,9 @@ export function AppButton({
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={isSecondary || isGhost ? theme.colors.accent : '#FFFFFF'} />
+        <ActivityIndicator color={isSecondary || isGhost ? colors.accent : '#FFFFFF'} />
       ) : (
-        <Text style={[styles.label, (isSecondary || isGhost) && styles.secondaryLabel]}>{label}</Text>
+        <Text style={[styles.label, (isSecondary || isGhost) && { color: colors.accent }]}>{label}</Text>
       )}
     </Pressable>
   );
@@ -58,17 +60,10 @@ export function AppButton({
 const styles = StyleSheet.create({
   base: {
     alignItems: 'center',
-    backgroundColor: theme.colors.accent,
-    borderRadius: theme.radius.lg,
     justifyContent: 'center',
     minHeight: Platform.select({ ios: 50, android: 48, default: 48 }),
-    paddingHorizontal: theme.spacing.lg,
   },
-  secondary: {
-    backgroundColor: theme.colors.accentSoft,
-    borderColor: 'transparent',
-    borderWidth: 0,
-  },
+  secondary: {},
   ghost: {
     backgroundColor: 'transparent',
     minHeight: 42,
@@ -85,7 +80,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   secondaryLabel: {
-    color: theme.colors.accent,
     fontWeight: '600',
   },
 });

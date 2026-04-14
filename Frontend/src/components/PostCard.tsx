@@ -1,7 +1,7 @@
 import React from 'react';
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { AppButton } from '@/components/AppButton';
-import { theme } from '@/constants/theme';
+import { useTheme } from '@/context/ThemeContext';
 import { Post } from '@/types/post';
 import { useI18n } from '@/i18n';
 
@@ -22,43 +22,47 @@ export function PostCard({
   interestLoading = false,
   hideInterestButton = false,
 }: Props) {
+  const { colors, radius, spacing } = useTheme();
   const { t } = useI18n();
 
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}>
-      <View style={styles.header}>
-        <View style={styles.avatar} />
+    <Pressable onPress={onPress} style={({ pressed }) => [
+      styles.card,
+      { backgroundColor: colors.surface, borderColor: colors.border, borderRadius: radius.lg, borderWidth: 1, padding: spacing.md },
+      Platform.OS === 'ios' && pressed && { opacity: 0.92 },
+    ]}>
+      <View style={[styles.header, { gap: spacing.sm }]}>
+        <View style={[styles.avatar, { backgroundColor: colors.border }]} />
         <View style={styles.headerTextWrap}>
           <Pressable disabled={!onPressAuthor} onPress={onPressAuthor}>
-            <Text style={styles.author}>{post.user?.name ?? t.postCard.user}</Text>
+            <Text style={[styles.author, { color: colors.textPrimary }]}>{post.user?.name ?? t.postCard.user}</Text>
           </Pressable>
-          <Text style={styles.category}>{post.category}</Text>
+          <Text style={[styles.category, { color: colors.textSecondary }]}>{post.category}</Text>
           {post.user?.profile?.location ? (
-            <Text style={styles.location}>
+            <Text style={[styles.location, { color: colors.textSecondary }]}>
               {t.postCard.location}: {post.user.profile.location}
             </Text>
           ) : null}
         </View>
       </View>
 
-      <Text style={styles.title}>{post.title}</Text>
-      <Text numberOfLines={3} style={styles.description}>
+      <Text style={[styles.title, { color: colors.textPrimary }]}>{post.title}</Text>
+      <Text numberOfLines={3} style={[styles.description, { color: colors.textSecondary }]}>
         {post.description}
       </Text>
 
       <View style={styles.meta}>
-        <Text style={styles.metaText}>{post.type === 'NEED' ? t.posts.need : t.posts.offer}</Text>
-        <Text style={styles.metaDot}>•</Text>
-        <Text style={styles.metaText}>{post.status === 'ACTIVE' ? t.postCard.active : t.postCard.closed}</Text>
+        <Text style={[styles.metaText, { color: colors.textSecondary }]}>{post.type === 'NEED' ? t.posts.need : t.posts.offer}</Text>
+        <Text style={[styles.metaDot, { color: colors.textSecondary }]}>•</Text>
+        <Text style={[styles.metaText, { color: colors.textSecondary }]}>{post.status === 'ACTIVE' ? t.postCard.active : t.postCard.closed}</Text>
       </View>
 
       {!hideInterestButton && onPressInterest ? (
-        <View style={styles.actions}>
+        <View style={[styles.actions, { alignItems: 'flex-end' }]}>
           <AppButton
             label={t.postCard.interested}
             onPress={onPressInterest}
             loading={interestLoading}
-            style={styles.interestButton}
           />
         </View>
       ) : null}
@@ -68,35 +72,14 @@ export function PostCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: theme.colors.surface,
-    borderColor: theme.colors.border,
-    borderRadius: theme.radius.lg,
-    borderWidth: 1,
-    gap: theme.spacing.sm,
-    marginBottom: theme.spacing.md,
-    padding: theme.spacing.md,
-    ...Platform.select({
-      android: {
-        elevation: 1,
-      },
-      ios: {
-        shadowColor: '#000000',
-        shadowOpacity: 0.04,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 8,
-      },
-    }),
-  },
-  cardPressed: {
-    opacity: Platform.OS === 'ios' ? 0.92 : 1,
+    gap: 8,
+    marginBottom: 16,
   },
   header: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: theme.spacing.sm,
   },
   avatar: {
-    backgroundColor: theme.colors.border,
     borderRadius: 16,
     height: 32,
     width: 32,
@@ -105,27 +88,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   author: {
-    color: theme.colors.textPrimary,
-    fontSize: theme.text.caption,
+    fontSize: 13,
     fontWeight: '600',
   },
   category: {
-    color: theme.colors.textSecondary,
     fontSize: 12,
   },
   location: {
-    color: theme.colors.textSecondary,
     fontSize: 12,
     marginTop: 2,
   },
   title: {
-    color: theme.colors.textPrimary,
     fontSize: 17,
     fontWeight: '700',
   },
   description: {
-    color: theme.colors.textSecondary,
-    fontSize: theme.text.body,
+    fontSize: 15,
     lineHeight: 20,
   },
   meta: {
@@ -133,17 +111,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   metaText: {
-    color: theme.colors.textSecondary,
     fontSize: 12,
   },
   metaDot: {
-    color: theme.colors.textSecondary,
     marginHorizontal: 8,
   },
-  actions: {
-    alignItems: 'flex-end',
-  },
-  interestButton: {
-    minHeight: 40,
-  },
+  actions: {},
+  interestButton: {},
 });

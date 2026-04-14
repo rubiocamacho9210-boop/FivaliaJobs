@@ -7,23 +7,25 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { theme } from '@/constants/theme';
+import { useTheme } from '@/context/ThemeContext';
 
 type Props = PropsWithChildren<{
   scrollable?: boolean;
 }>;
 
 export function ScreenContainer({ children, scrollable = false }: Props) {
+  const { colors, spacing } = useTheme();
+
   const content = scrollable ? (
-    <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
+    <ScrollView contentContainerStyle={[styles.scrollContent, { paddingHorizontal: spacing.lg, paddingTop: spacing.lg, paddingBottom: spacing.xl }]} keyboardShouldPersistTaps="handled">
       {children}
     </ScrollView>
   ) : (
-    <View style={styles.content}>{children}</View>
+    <View style={[styles.content, { paddingHorizontal: spacing.lg, paddingTop: spacing.lg, paddingBottom: spacing.lg }]}>{children}</View>
   );
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
       <KeyboardAvoidingView
         style={styles.keyboard}
         behavior={Platform.select({ ios: 'padding', android: undefined })}
@@ -37,21 +39,14 @@ export function ScreenContainer({ children, scrollable = false }: Props) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: theme.colors.background,
   },
   keyboard: {
     flex: 1,
   },
   content: {
     flex: 1,
-    paddingHorizontal: theme.spacing.lg,
-    paddingTop: theme.spacing.lg,
-    paddingBottom: theme.spacing.lg,
   },
   scrollContent: {
     flexGrow: 1,
-    paddingHorizontal: theme.spacing.lg,
-    paddingTop: theme.spacing.lg,
-    paddingBottom: theme.spacing.xl,
   },
 });

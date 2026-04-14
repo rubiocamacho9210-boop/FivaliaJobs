@@ -13,15 +13,15 @@ export const lightColors = {
 };
 
 export const darkColors = {
-  background: '#1C1C1E',
-  surface: '#2C2C2E',
-  surfaceAlt: '#3A3A3C',
+  background: '#121212',
+  surface: '#1E1E1E',
+  surfaceAlt: '#2D2D2D',
   textPrimary: '#FFFFFF',
-  textSecondary: '#8E8E93',
-  border: '#48484A',
-  accent: '#0A84FF',
-  accentSoft: '#1C3A5E',
-  danger: '#FF453A',
+  textSecondary: '#A0A0A0',
+  border: '#404040',
+  accent: '#9B59B6',
+  accentSoft: '#3D2A4D',
+  danger: '#E74C3C',
 };
 
 export const spacing = {

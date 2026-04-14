@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Modal, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { theme } from '@/constants/theme';
+import { useTheme } from '@/context/ThemeContext';
+import { useI18n } from '@/i18n';
 
 type Props = {
   label: string;
@@ -12,6 +13,8 @@ type Props = {
 };
 
 export function AppDatePicker({ label, value, onChange, error, maximumDate }: Props) {
+  const { colors, radius, spacing, text } = useTheme();
+  const { t } = useI18n();
   const [show, setShow] = useState(false);
 
   const handleChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
@@ -37,27 +40,29 @@ export function AppDatePicker({ label, value, onChange, error, maximumDate }: Pr
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+    <View style={[styles.container, { marginBottom: spacing.md }]}>
+      <Text style={[styles.label, { color: colors.textSecondary, fontSize: text.caption, marginBottom: spacing.xs }]}>
+        {label}
+      </Text>
       <Pressable onPress={() => setShow(true)} style={styles.touchable}>
-        <View style={styles.display}>
-          <Text style={value ? styles.text : styles.placeholder}>
-            {value ? formatDate(value) : 'Selecciona una fecha'}
+        <View style={[styles.display, { backgroundColor: colors.surfaceAlt, borderRadius: radius.md, borderWidth: Platform.OS === 'ios' ? 1 : 0, borderColor: colors.border, minHeight: Platform.select({ ios: 50, android: 56, default: 56 }), paddingHorizontal: spacing.md }]}>
+          <Text style={value ? [styles.text, { color: colors.textPrimary, fontSize: text.body }] : [styles.placeholder, { color: colors.textSecondary, fontSize: text.body }]}>
+            {value ? formatDate(value) : t.register.selectBirthDate}
           </Text>
         </View>
       </Pressable>
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <Text style={[styles.error, { color: colors.danger }]}>{error}</Text> : null}
 
       {Platform.OS === 'ios' ? (
         <Modal visible={show} transparent animationType="slide">
           <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              <View style={styles.modalHeader}>
+            <View style={[styles.modalContent, { backgroundColor: colors.surface, borderTopLeftRadius: radius.lg, borderTopRightRadius: radius.lg }]}>
+              <View style={[styles.modalHeader, { borderBottomColor: colors.border, paddingHorizontal: spacing.md, paddingVertical: spacing.md }]}>
                 <Pressable onPress={() => setShow(false)}>
-                  <Text style={styles.modalCancel}>Cancelar</Text>
+                  <Text style={[styles.modalCancel, { color: colors.textSecondary, fontSize: text.body }]}>{t.common.cancel}</Text>
                 </Pressable>
                 <Pressable onPress={() => setShow(false)}>
-                  <Text style={styles.modalDone}>Hecho</Text>
+                  <Text style={[styles.modalDone, { color: colors.accent, fontSize: text.body }]}>Done</Text>
                 </Pressable>
               </View>
               <DateTimePicker
@@ -66,6 +71,7 @@ export function AppDatePicker({ label, value, onChange, error, maximumDate }: Pr
                 display="spinner"
                 onChange={handleChange}
                 maximumDate={maximumDate}
+                textColor={colors.textPrimary}
               />
             </View>
           </View>
@@ -86,38 +92,20 @@ export function AppDatePicker({ label, value, onChange, error, maximumDate }: Pr
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: theme.spacing.md,
-  },
+  container: {},
   label: {
-    color: theme.colors.textSecondary,
-    fontSize: theme.text.caption,
     fontWeight: Platform.select({ ios: '600', android: '500', default: '500' }),
-    marginBottom: theme.spacing.xs,
   },
   touchable: {
-    borderRadius: theme.radius.md,
+    borderRadius: 14,
     overflow: 'hidden',
   },
   display: {
-    backgroundColor: theme.colors.surfaceAlt,
-    borderRadius: theme.radius.md,
-    borderWidth: Platform.OS === 'ios' ? 1 : 0,
-    borderColor: theme.colors.border,
-    minHeight: Platform.select({ ios: 50, android: 56, default: 56 }),
     justifyContent: 'center',
-    paddingHorizontal: theme.spacing.md,
   },
-  text: {
-    color: theme.colors.textPrimary,
-    fontSize: theme.text.body,
-  },
-  placeholder: {
-    color: theme.colors.textSecondary,
-    fontSize: theme.text.body,
-  },
+  text: {},
+  placeholder: {},
   error: {
-    color: theme.colors.danger,
     fontSize: 12,
     marginTop: 6,
   },
@@ -127,26 +115,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.4)',
   },
   modalContent: {
-    backgroundColor: theme.colors.surface,
-    borderTopLeftRadius: theme.radius.lg,
-    borderTopRightRadius: theme.radius.lg,
     paddingBottom: 40,
   },
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
   },
-  modalCancel: {
-    color: theme.colors.textSecondary,
-    fontSize: theme.text.body,
-  },
+  modalCancel: {},
   modalDone: {
-    color: theme.colors.accent,
-    fontSize: theme.text.body,
     fontWeight: '600',
   },
 });

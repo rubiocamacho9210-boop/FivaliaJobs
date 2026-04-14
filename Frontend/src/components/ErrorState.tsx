@@ -1,18 +1,22 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { AppButton } from '@/components/AppButton';
-import { theme } from '@/constants/theme';
+import { useTheme } from '@/context/ThemeContext';
 
 type Props = {
   message?: string;
   onRetry?: () => void;
 };
 
-export function ErrorState({ message = 'No pudimos cargar esta seccion.', onRetry }: Props) {
+export function ErrorState({ message, onRetry }: Props) {
+  const { colors, spacing, radius, text } = useTheme();
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.message}>{message}</Text>
-      {onRetry ? <AppButton label="Reintentar" variant="secondary" onPress={onRetry} /> : null}
+    <View style={[styles.container, { backgroundColor: colors.surface, borderColor: colors.border, borderRadius: radius.lg, borderWidth: 1, gap: spacing.md, padding: spacing.lg }]}>
+      <Text style={[styles.message, { color: colors.textSecondary, fontSize: text.body }]}>
+        {message}
+      </Text>
+      {onRetry ? <AppButton label="Retry" variant="secondary" onPress={onRetry} /> : null}
     </View>
   );
 }
@@ -20,16 +24,8 @@ export function ErrorState({ message = 'No pudimos cargar esta seccion.', onRetr
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: theme.colors.surface,
-    borderColor: theme.colors.border,
-    borderRadius: theme.radius.lg,
-    borderWidth: 1,
-    gap: theme.spacing.md,
-    padding: theme.spacing.lg,
   },
   message: {
-    color: theme.colors.textSecondary,
-    fontSize: theme.text.body,
     textAlign: 'center',
   },
 });
