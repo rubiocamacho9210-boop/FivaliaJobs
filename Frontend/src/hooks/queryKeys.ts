@@ -5,4 +5,10 @@ export const queryKeys = {
   myInterests: ['interests', 'me'] as const,
   myProfile: ['profile', 'me'] as const,
   profileByUser: (userId: string) => ['profile', userId] as const,
+  favorites: ['favorites'] as const,
+  following: ['follows', 'following'] as const,
+  followers: ['follows', 'followers'] as const,
+  followCounts: ['follows', 'counts'] as const,
+  reviews: ['reviews'] as const,
+  reviewsForUser: (userId: string) => ['reviews', 'user', userId] as const,
 };

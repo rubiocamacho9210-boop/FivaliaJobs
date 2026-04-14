@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { FlatList, RefreshControl, StyleSheet, Text } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { EmptyState } from '@/components/EmptyState';
@@ -8,18 +8,55 @@ import { PostCard } from '@/components/PostCard';
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { theme } from '@/constants/theme';
+import { useAddFavoriteMutation, useMyFavoritesQuery, useRemoveFavoriteMutation } from '@/hooks/useFavorites';
+import { useFollowCountsQuery, useFollowMutation, useFollowingQuery, useUnfollowMutation } from '@/hooks/useFollows';
 import { usePostsByUserQuery } from '@/hooks/usePosts';
 import { usePublicProfileQuery } from '@/hooks/useProfile';
 import { AppStackParamList } from '@/navigation/types';
+import { useAuthStore } from '@/store/authStore';
 import { useI18n } from '@/i18n';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'PublicProfile'>;
 
 export function PublicProfileScreen({ route, navigation }: Props) {
   const { userId } = route.params;
+  const currentUser = useAuthStore((state) => state.user);
   const profileQuery = usePublicProfileQuery(userId);
   const postsQuery = usePostsByUserQuery(userId);
   const { t } = useI18n();
+
+  const { data: followingData } = useFollowingQuery();
+  const { data: followCounts } = useFollowCountsQuery();
+  const followMutation = useUnfollowMutation();
+  const unfollowMutation = useFollowMutation();
+
+  const isOwnProfile = currentUser?.id === userId;
+  const isFollowing = useMemo(() => {
+    return followingData?.some((f) => f.following.id === userId) ?? false;
+  }, [followingData, userId]);
+
+  const { data: favoritesData } = useMyFavoritesQuery();
+  const addFavoriteMutation = useAddFavoriteMutation();
+  const removeFavoriteMutation = useRemoveFavoriteMutation();
+  const favoritePostIds = useMemo(() => {
+    return new Set(favoritesData?.map((f) => f.post?.id).filter(Boolean) ?? []);
+  }, [favoritesData]);
+
+  const onPressFollow = async () => {
+    if (isFollowing) {
+      await unfollowMutation.mutateAsync(userId);
+    } else {
+      await followMutation.mutateAsync(userId);
+    }
+  };
+
+  const onPressFavorite = async (postId: string) => {
+    if (favoritePostIds.has(postId)) {
+      await removeFavoriteMutation.mutateAsync(postId);
+    } else {
+      await addFavoriteMutation.mutateAsync(postId);
+    }
+  };
 
   if (profileQuery.isLoading) {
     return (
@@ -53,7 +90,17 @@ export function PublicProfileScreen({ route, navigation }: Props) {
         }
         ListHeaderComponent={
           <>
-            <ProfileHeader profile={profileQuery.data} />
+            <ProfileHeader
+              profile={profileQuery.data}
+              isFollowing={isFollowing}
+              onPressFollow={onPressFollow}
+              followLoading={followMutation.isPending || unfollowMutation.isPending}
+              showFollowButton={!isOwnProfile}
+              followersCount={followCounts?.followers}
+              followingCount={followCounts?.following}
+              onPressFollowers={() => navigation.navigate('MyFollowers')}
+              onPressFollowing={() => navigation.navigate('MainTabs', { screen: 'MyFollowing' } as any)}
+            />
             <Text style={styles.listTitle}>{t.profile.publications}</Text>
             {postsQuery.isLoading ? <LoadingState /> : null}
             {postsQuery.isError ? (
@@ -74,7 +121,10 @@ export function PublicProfileScreen({ route, navigation }: Props) {
           <PostCard
             post={item}
             onPress={() => navigation.navigate('PostDetail', { postId: item.id })}
-            hideInterestButton
+            hideInterestButton={isOwnProfile}
+            onPressFavorite={() => onPressFavorite(item.id)}
+            isFavorite={favoritePostIds.has(item.id)}
+            favoriteLoading={addFavoriteMutation.isPending || removeFavoriteMutation.isPending}
           />
         )}
         contentContainerStyle={styles.list}

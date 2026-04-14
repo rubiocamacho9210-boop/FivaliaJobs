@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { theme } from '@/constants/theme';
+import { useTheme } from '@/context/ThemeContext';
 
 type Props = {
   title: string;
@@ -8,10 +8,12 @@ type Props = {
 };
 
 export function EmptyState({ title, description }: Props) {
+  const { colors, spacing, radius, text } = useTheme();
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.description}>{description}</Text>
+    <View style={[styles.container, { backgroundColor: colors.surface, borderColor: colors.border, borderRadius: radius.lg, borderWidth: 1, padding: spacing.lg }]}>
+      <Text style={[styles.title, { color: colors.textPrimary, fontSize: text.title }]}>{title}</Text>
+      <Text style={[styles.description, { color: colors.textSecondary, fontSize: text.body }]}>{description}</Text>
     </View>
   );
 }
@@ -19,22 +21,13 @@ export function EmptyState({ title, description }: Props) {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: theme.colors.surface,
-    borderColor: theme.colors.border,
-    borderRadius: theme.radius.lg,
-    borderWidth: 1,
-    padding: theme.spacing.lg,
   },
   title: {
-    color: theme.colors.textPrimary,
-    fontSize: theme.text.title,
     fontWeight: '700',
     marginBottom: 6,
     textAlign: 'center',
   },
   description: {
-    color: theme.colors.textSecondary,
-    fontSize: theme.text.body,
     textAlign: 'center',
   },
 });

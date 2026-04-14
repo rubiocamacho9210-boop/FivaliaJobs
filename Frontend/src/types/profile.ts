@@ -2,6 +2,8 @@ export type UserSummary = {
   id: string;
   name: string;
   role: 'CLIENT' | 'WORKER';
+  rating: number;
+  ratingCount: number;
 };
 
 export type Profile = {
@@ -11,6 +13,7 @@ export type Profile = {
   category: string | null;
   location: string | null;
   contact: string | null;
+  photoUrl: string | null;
   createdAt: string;
   updatedAt: string;
   user: UserSummary;
@@ -21,4 +24,5 @@ export type UpdateProfileRequest = {
   category?: string;
   location?: string;
   contact?: string;
+  photoUrl?: string;
 };

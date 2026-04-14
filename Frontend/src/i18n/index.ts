@@ -3,12 +3,16 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { en } from './en';
 import { es } from './es';
+import { fr } from './fr';
+import { de } from './de';
+import { pt } from './pt';
+import { it } from './it';
 
-export type Language = 'en' | 'es';
+export type Language = 'en' | 'es' | 'fr' | 'de' | 'pt' | 'it';
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type Translations = typeof en;
 
-const translations: Record<Language, Translations> = { en, es };
+const translations: Record<Language, Translations> = { en, es, fr, de, pt, it };
 
 type I18nState = {
   language: Language;

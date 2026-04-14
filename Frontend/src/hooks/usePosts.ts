@@ -1,12 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createPost, getPostById, getPosts, getPostsByUserId } from '@/services/api/postsApi';
 import { queryKeys } from '@/hooks/queryKeys';
-import { CreatePostRequest } from '@/types/post';
+import { CreatePostRequest, PostType } from '@/types/post';
 
-export function usePostsQuery() {
+export type PostFilters = {
+  type?: PostType;
+  category?: string;
+  search?: string;
+  location?: string;
+};
+
+export function usePostsQuery(filters?: PostFilters) {
   return useQuery({
-    queryKey: queryKeys.posts,
-    queryFn: () => getPosts({ page: 1, limit: 30 }),
+    queryKey: [...queryKeys.posts, filters],
+    queryFn: () => getPosts({ page: 1, limit: 30, ...filters }),
   });
 }
 

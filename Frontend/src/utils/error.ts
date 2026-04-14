@@ -1,16 +1,18 @@
 import { AxiosError } from 'axios';
 import { ApiError } from '@/types/api';
+import { useI18n } from '@/i18n';
 
 export function getApiErrorMessage(error: unknown): string {
+  const { t } = useI18n.getState();
   const axiosError = error as AxiosError<ApiError>;
-  const fallback = 'Algo salio mal. Intenta de nuevo.';
+  const fallback = t.errors.generic;
 
   if (axiosError?.code === 'ECONNABORTED') {
-    return 'El servidor tardo demasiado en responder. Intenta de nuevo.';
+    return t.errors.serverTimeout;
   }
 
   if (!axiosError?.response && axiosError?.request) {
-    return 'No se pudo conectar al servidor. Verifica que el backend este activo y la URL API sea correcta.';
+    return t.errors.connectionFailed;
   }
 
   if (!axiosError?.response?.data) {
@@ -24,14 +26,14 @@ export function getApiErrorMessage(error: unknown): string {
 
   const normalized = (message || '').toString().trim();
   const knownMessages: Record<string, string> = {
-    'Invalid credentials': 'Credenciales invalidas.',
-    'Email already in use': 'Ese correo ya esta registrado.',
-    'Profile not found': 'Completa tu perfil para continuar.',
-    'Post not found': 'No encontramos la publicacion.',
-    'Cannot express interest in a closed post': 'La publicacion esta cerrada.',
-    'You cannot express interest in your own post': 'No puedes marcar interes en tu propia publicacion.',
-    'You have already expressed interest in this post': 'Ya marcaste interes en esta publicacion.',
-    'Only the post owner can view its interests': 'Solo el autor puede ver intereses de esta publicacion.',
+    'Invalid credentials': t.errors.invalidCredentials,
+    'Email already in use': t.errors.emailAlreadyInUse,
+    'Profile not found': t.errors.profileNotFound,
+    'Post not found': t.errors.postNotFound,
+    'Cannot express interest in a closed post': t.errors.postClosed,
+    'You cannot express interest in your own post': t.errors.cannotInterestOwnPost,
+    'You have already expressed interest in this post': t.errors.alreadyExpressedInterest,
+    'Only the post owner can view its interests': t.errors.onlyOwnerCanViewInterests,
   };
 
   return knownMessages[normalized] || normalized || fallback;

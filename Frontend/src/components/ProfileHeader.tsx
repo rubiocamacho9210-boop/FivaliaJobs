@@ -1,26 +1,86 @@
 import React from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
-import { theme } from '@/constants/theme';
+import { Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useTheme } from '@/context/ThemeContext';
+import { useI18n } from '@/i18n';
 import { Profile } from '@/types/profile';
+import { StarRating } from './StarRating';
 
 type Props = {
   profile: Profile;
+  isFollowing?: boolean;
+  onPressFollow?: () => void;
+  followLoading?: boolean;
+  showFollowButton?: boolean;
+  onPressFollowers?: () => void;
+  onPressFollowing?: () => void;
+  followersCount?: number;
+  followingCount?: number;
 };
 
-export function ProfileHeader({ profile }: Props) {
-  return (
-    <View style={styles.container}>
-      <View style={styles.avatar} />
-      <Text style={styles.name}>{profile.user.name}</Text>
-      <Text style={styles.role}>{profile.user.role === 'WORKER' ? 'Trabajador' : 'Cliente'}</Text>
+export function ProfileHeader({ profile, isFollowing = false, onPressFollow, followLoading = false, showFollowButton = false, onPressFollowers, onPressFollowing, followersCount, followingCount }: Props) {
+  const { colors, radius, spacing } = useTheme();
+  const { t } = useI18n();
+  const userName = profile.user?.name ?? t.postCard.user;
+  const userRole = profile.user?.role ?? 'WORKER';
+  const userRating = profile.user?.rating ?? 0;
+  const userRatingCount = profile.user?.ratingCount ?? 0;
 
-      {profile.bio ? <Text style={styles.bio}>{profile.bio}</Text> : null}
+  return (
+    <View style={[styles.container, { backgroundColor: colors.surface, borderColor: colors.border, borderRadius: radius.lg, borderWidth: 1, padding: spacing.lg, marginBottom: spacing.md }]}>
+      {profile.photoUrl ? (
+        <Image source={{ uri: profile.photoUrl }} style={[styles.avatar, { borderRadius: 48 }]} />
+      ) : (
+        <View style={[styles.avatarPlaceholder, { backgroundColor: colors.border, borderRadius: 48 }]}>
+          <Text style={[styles.avatarInitial, { color: colors.textPrimary }]}>
+            {userName.charAt(0).toUpperCase()}
+          </Text>
+        </View>
+      )}
+      <Text style={[styles.name, { color: colors.textPrimary }]}>{userName}</Text>
+      <Text style={[styles.role, { color: colors.textSecondary }]}>{userRole === 'WORKER' ? t.register.worker : t.register.client}</Text>
+
+      {userRatingCount > 0 && (
+        <View style={[styles.ratingContainer, { marginTop: spacing.xs }]}>
+          <StarRating rating={userRating} ratingCount={userRatingCount} size="small" />
+        </View>
+      )}
+
+      {(followersCount !== undefined || followingCount !== undefined) && (
+        <View style={[styles.statsRow, { marginTop: spacing.sm }]}>
+          {followersCount !== undefined && onPressFollowers && (
+            <Pressable onPress={onPressFollowers} style={styles.statItem}>
+              <Text style={[styles.statCount, { color: colors.textPrimary }]}>{followersCount}</Text>
+              <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t.follows.followers}</Text>
+            </Pressable>
+          )}
+          {followingCount !== undefined && onPressFollowing && (
+            <Pressable onPress={onPressFollowing} style={styles.statItem}>
+              <Text style={[styles.statCount, { color: colors.textPrimary }]}>{followingCount}</Text>
+              <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t.follows.following}</Text>
+            </Pressable>
+          )}
+        </View>
+      )}
+
+      {profile.bio ? <Text style={[styles.bio, { color: colors.textSecondary }]}>{profile.bio}</Text> : null}
 
       <View style={styles.metaWrap}>
-        {profile.category ? <Text style={styles.meta}>{profile.category}</Text> : null}
-        {profile.location ? <Text style={styles.meta}>{profile.location}</Text> : null}
-        {profile.contact ? <Text style={styles.meta}>{profile.contact}</Text> : null}
+        {profile.category ? <Text style={[styles.meta, { color: colors.textSecondary }]}>{profile.category}</Text> : null}
+        {profile.location ? <Text style={[styles.meta, { color: colors.textSecondary }]}>{profile.location}</Text> : null}
+        {profile.contact ? <Text style={[styles.meta, { color: colors.textSecondary }]}>{profile.contact}</Text> : null}
       </View>
+
+      {showFollowButton && onPressFollow && (
+        <Pressable
+          onPress={onPressFollow}
+          disabled={followLoading}
+          style={[styles.followButton, { backgroundColor: isFollowing ? colors.surfaceAlt : colors.accent, borderRadius: radius.md, marginTop: spacing.md }]}
+        >
+          <Text style={[styles.followButtonText, { color: isFollowing ? colors.textPrimary : '#FFFFFF' }]}>
+            {isFollowing ? t.follows.unfollow : t.follows.follow}
+          </Text>
+        </Pressable>
+      )}
     </View>
   );
 }
@@ -28,54 +88,65 @@ export function ProfileHeader({ profile }: Props) {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: theme.colors.surface,
-    borderColor: theme.colors.border,
-    borderRadius: theme.radius.lg,
-    borderWidth: 1,
-    marginBottom: theme.spacing.md,
-    padding: theme.spacing.lg,
-    ...Platform.select({
-      android: {
-        elevation: 1,
-      },
-      ios: {
-        shadowColor: '#000000',
-        shadowOpacity: 0.03,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 8,
-      },
-    }),
   },
   avatar: {
-    backgroundColor: theme.colors.border,
-    borderRadius: 36,
-    height: 72,
-    marginBottom: theme.spacing.sm,
-    width: 72,
+    width: 96,
+    height: 96,
+    marginBottom: 12,
+  },
+  avatarPlaceholder: {
+    width: 96,
+    height: 96,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  avatarInitial: {
+    fontSize: 40,
+    fontWeight: '700',
   },
   name: {
-    color: theme.colors.textPrimary,
     fontSize: 24,
     fontWeight: '700',
   },
   role: {
-    color: theme.colors.textSecondary,
-    fontSize: theme.text.body,
+    fontSize: 15,
     marginTop: 2,
   },
+  ratingContainer: {},
   bio: {
-    color: theme.colors.textSecondary,
-    fontSize: theme.text.body,
-    marginTop: theme.spacing.sm,
+    fontSize: 15,
+    marginTop: 16,
     textAlign: 'center',
   },
   metaWrap: {
     alignItems: 'center',
-    marginTop: theme.spacing.sm,
+    marginTop: 12,
   },
   meta: {
-    color: theme.colors.textSecondary,
     fontSize: 13,
     marginTop: 2,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    gap: 24,
+  },
+  statItem: {
+    alignItems: 'center',
+  },
+  statCount: {
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  statLabel: {
+    fontSize: 13,
+  },
+  followButton: {
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+  },
+  followButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

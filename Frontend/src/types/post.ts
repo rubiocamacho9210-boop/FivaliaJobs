@@ -5,9 +5,12 @@ export type PostAuthor = {
   id: string;
   name: string;
   role?: 'CLIENT' | 'WORKER';
+  rating?: number;
+  ratingCount?: number;
   profile?: {
     location: string | null;
     contact: string | null;
+    photoUrl: string | null;
   } | null;
 };
 

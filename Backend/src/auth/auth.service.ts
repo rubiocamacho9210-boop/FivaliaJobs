@@ -42,6 +42,8 @@ export class AuthService {
         name: true,
         email: true,
         role: true,
+        rating: true,
+        ratingCount: true,
         createdAt: true,
       },
     });
@@ -75,6 +77,8 @@ export class AuthService {
         name: user.name,
         email: user.email,
         role: user.role,
+        rating: user.rating,
+        ratingCount: user.ratingCount,
       },
     };
   }

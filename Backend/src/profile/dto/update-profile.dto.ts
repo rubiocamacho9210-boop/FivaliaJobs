@@ -20,4 +20,9 @@ export class UpdateProfileDto {
   @IsString()
   @MaxLength(100)
   contact?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  photoUrl?: string;
 }
