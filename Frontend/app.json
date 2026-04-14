@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "FivaliaJobs",
+    "slug": "fivaliajobs-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "fivaliajobs",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": false
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      }
+    }
+  }
+}
