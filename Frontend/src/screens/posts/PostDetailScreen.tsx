@@ -6,13 +6,13 @@ import { ErrorState } from '@/components/ErrorState';
 import { LoadingState } from '@/components/LoadingState';
 import { PostCard } from '@/components/PostCard';
 import { ScreenContainer } from '@/components/ScreenContainer';
-import { theme } from '@/constants/theme';
 import { useCreateInterestMutation } from '@/hooks/useInterests';
 import { usePostDetailQuery } from '@/hooks/usePosts';
 import { AppStackParamList } from '@/navigation/types';
 import { useAuthStore } from '@/store/authStore';
 import { getApiErrorMessage } from '@/utils/error';
 import { useI18n } from '@/i18n';
+import { useTheme } from '@/context/ThemeContext';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'PostDetail'>;
 
@@ -22,6 +22,7 @@ export function PostDetailScreen({ route, navigation }: Props) {
   const { data: post, isLoading, isError, refetch } = usePostDetailQuery(postId);
   const createInterestMutation = useCreateInterestMutation();
   const { t } = useI18n();
+  const { colors, spacing, radius, text } = useTheme();
   const [interestError, setInterestError] = useState<string | null>(null);
 
   const onPressInterest = async () => {
@@ -65,29 +66,47 @@ export function PostDetailScreen({ route, navigation }: Props) {
         interestLoading={createInterestMutation.isPending}
       />
 
-      {interestError ? <Text style={styles.error}>{interestError}</Text> : null}
+      {interestError ? (
+        <Text style={[styles.error, { color: colors.danger, marginBottom: spacing.md }]}>
+          {interestError}
+        </Text>
+      ) : null}
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t.posts.fullDescription}</Text>
-        <Text style={styles.sectionBody}>{post.description}</Text>
+      <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.border, borderRadius: radius.lg, borderWidth: 1, marginBottom: spacing.md, padding: spacing.md }]}>
+        <Text style={[styles.sectionTitle, { color: colors.textPrimary, fontSize: 14, fontWeight: '700', marginBottom: 6 }]}>
+          {t.posts.fullDescription}
+        </Text>
+        <Text style={[styles.sectionBody, { color: colors.textSecondary, fontSize: text.body }]}>
+          {post.description}
+        </Text>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t.profile.category}</Text>
-        <Text style={styles.sectionBody}>{post.category}</Text>
+      <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.border, borderRadius: radius.lg, borderWidth: 1, marginBottom: spacing.md, padding: spacing.md }]}>
+        <Text style={[styles.sectionTitle, { color: colors.textPrimary, fontSize: 14, fontWeight: '700', marginBottom: 6 }]}>
+          {t.profile.category}
+        </Text>
+        <Text style={[styles.sectionBody, { color: colors.textSecondary, fontSize: text.body }]}>
+          {post.category}
+        </Text>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t.posts.type}</Text>
-        <Text style={styles.sectionBody}>
+      <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.border, borderRadius: radius.lg, borderWidth: 1, marginBottom: spacing.md, padding: spacing.md }]}>
+        <Text style={[styles.sectionTitle, { color: colors.textPrimary, fontSize: 14, fontWeight: '700', marginBottom: 6 }]}>
+          {t.posts.type}
+        </Text>
+        <Text style={[styles.sectionBody, { color: colors.textSecondary, fontSize: text.body }]}>
           {post.type === 'NEED' ? t.posts.needsHelp : t.posts.offersService}
         </Text>
       </View>
 
       {post.user?.profile?.contact ? (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t.profile.contact}</Text>
-          <Text style={styles.sectionBody}>{post.user.profile.contact}</Text>
+        <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.border, borderRadius: radius.lg, borderWidth: 1, marginBottom: spacing.md, padding: spacing.md }]}>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary, fontSize: 14, fontWeight: '700', marginBottom: 6 }]}>
+            {t.profile.contact}
+          </Text>
+          <Text style={[styles.sectionBody, { color: colors.textSecondary, fontSize: text.body }]}>
+            {post.user.profile.contact}
+          </Text>
         </View>
       ) : null}
 
@@ -104,26 +123,8 @@ export function PostDetailScreen({ route, navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  error: {
-    color: theme.colors.danger,
-    marginBottom: theme.spacing.md,
-  },
-  section: {
-    backgroundColor: theme.colors.surface,
-    borderColor: theme.colors.border,
-    borderRadius: theme.radius.lg,
-    borderWidth: 1,
-    marginBottom: theme.spacing.md,
-    padding: theme.spacing.md,
-  },
-  sectionTitle: {
-    color: theme.colors.textPrimary,
-    fontSize: 14,
-    fontWeight: '700',
-    marginBottom: 6,
-  },
-  sectionBody: {
-    color: theme.colors.textSecondary,
-    fontSize: theme.text.body,
-  },
+  error: {},
+  section: {},
+  sectionTitle: {},
+  sectionBody: {},
 });
