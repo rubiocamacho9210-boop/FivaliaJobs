@@ -5,9 +5,9 @@ import { useTheme } from '@/context/ThemeContext';
 type Size = 'sm' | 'md' | 'lg';
 
 const sizeMap = {
-  sm: { box: 32, font: 13, radius: 8 },
-  md: { box: 48, font: 19, radius: 12 },
-  lg: { box: 72, font: 28, radius: 18 },
+  sm: { box: 51, font: 21, radius: 13 },
+  md: { box: 77, font: 30, radius: 19 },
+  lg: { box: 115, font: 45, radius: 29 },
 };
 
 type Props = {
