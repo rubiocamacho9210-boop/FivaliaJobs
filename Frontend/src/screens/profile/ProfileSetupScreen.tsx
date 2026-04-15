@@ -69,7 +69,7 @@ export function ProfileSetupScreen({ route, navigation }: Props) {
         category: category.trim() || undefined,
         location: location.trim() || undefined,
         contact: contact.trim() || undefined,
-        photoUrl: resolvedPhotoUrl ?? undefined,
+        photoUrl: photoUrl === null ? null : resolvedPhotoUrl ?? undefined,
       });
       if (mode === 'create') {
         navigation.replace('MainTabs', { screen: 'Feed' });
@@ -83,14 +83,14 @@ export function ProfileSetupScreen({ route, navigation }: Props) {
 
   if (mode === 'edit' && profileQuery.isLoading) {
     return (
-      <ScreenContainer>
+      <ScreenContainer showWatermark={false}>
         <LoadingState />
       </ScreenContainer>
     );
   }
 
   return (
-    <ScreenContainer scrollable>
+    <ScreenContainer scrollable showWatermark={false}>
       <View style={[styles.header, { marginBottom: spacing.lg }]}>
         <Text style={[styles.title, { color: colors.textPrimary, fontSize: 24, fontWeight: '700' }]}>
           {mode === 'create' ? t.profile.setupProfile : t.profile.editProfile}

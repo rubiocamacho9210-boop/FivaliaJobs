@@ -24,5 +24,5 @@ export type UpdateProfileRequest = {
   category?: string;
   location?: string;
   contact?: string;
-  photoUrl?: string;
+  photoUrl?: string | null;
 };

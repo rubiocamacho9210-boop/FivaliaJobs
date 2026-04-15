@@ -24,5 +24,5 @@ export class UpdateProfileDto {
   @IsOptional()
   @IsString()
   @MaxLength(500)
-  photoUrl?: string;
+  photoUrl?: string | null;
 }
