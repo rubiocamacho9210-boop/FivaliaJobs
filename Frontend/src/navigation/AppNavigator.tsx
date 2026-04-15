@@ -2,6 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Platform } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
 import { useTheme } from '@/context/ThemeContext';
 import { useI18n } from '@/i18n';
@@ -43,11 +44,46 @@ function MainTabsNavigator() {
         tabBarHideOnKeyboard: true,
       }}
     >
-      <Tab.Screen name="Feed" component={FeedScreen} options={{ title: t.tabs.feed }} />
-      <Tab.Screen name="CreatePost" component={CreatePostScreen} options={{ title: t.tabs.publish }} />
-      <Tab.Screen name="MyInterests" component={MyInterestsScreen} options={{ title: t.tabs.interests }} />
-      <Tab.Screen name="Notifications" component={NotificationsScreen} options={{ title: t.notifications.title }} />
-      <Tab.Screen name="MyProfile" component={MyProfileScreen} options={{ title: t.tabs.profile }} />
+      <Tab.Screen
+        name="Feed"
+        component={FeedScreen}
+        options={{
+          title: t.tabs.feed,
+          tabBarIcon: ({ color, size }) => <Ionicons name="home-outline" size={size} color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="CreatePost"
+        component={CreatePostScreen}
+        options={{
+          title: t.tabs.publish,
+          tabBarIcon: ({ color, size }) => <Ionicons name="add-circle-outline" size={size} color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="MyInterests"
+        component={MyInterestsScreen}
+        options={{
+          title: t.tabs.interests,
+          tabBarIcon: ({ color, size }) => <Ionicons name="star-outline" size={size} color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{
+          title: t.notifications.title,
+          tabBarIcon: ({ color, size }) => <Ionicons name="notifications-outline" size={size} color={color} />,
+        }}
+      />
+      <Tab.Screen
+        name="MyProfile"
+        component={MyProfileScreen}
+        options={{
+          title: t.tabs.profile,
+          tabBarIcon: ({ color, size }) => <Ionicons name="person-outline" size={size} color={color} />,
+        }}
+      />
     </Tab.Navigator>
   );
 }
