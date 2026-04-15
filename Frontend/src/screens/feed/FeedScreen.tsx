@@ -18,6 +18,7 @@ import { getApiErrorMessage } from '@/utils/error';
 import { theme } from '@/constants/theme';
 import { useI18n } from '@/i18n';
 import { PostType } from '@/types/post';
+import { BrandMark } from '@/components/BrandMark';
 
 export function FeedScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
@@ -63,10 +64,15 @@ export function FeedScreen() {
   return (
     <ScreenContainer>
       <View style={styles.header}>
-        <Text style={styles.title}>{t.tabs.feed}</Text>
-        <Text style={styles.subtitle}>
-          {t.auth.welcome.replace('FivaliaJobs', '').trim()}, {user?.name ?? t.postCard.user}.
-        </Text>
+        <View style={styles.headerTop}>
+          <View>
+            <Text style={styles.title}>{t.tabs.feed}</Text>
+            <Text style={styles.subtitle}>
+              {t.auth.welcome.replace('FivaliaJobs', '').trim()}, {user?.name ?? t.postCard.user}.
+            </Text>
+          </View>
+          <BrandMark size="sm" />
+        </View>
       </View>
 
       <SearchInput
@@ -121,6 +127,11 @@ export function FeedScreen() {
 const styles = StyleSheet.create({
   header: {
     marginBottom: theme.spacing.lg,
+  },
+  headerTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   title: {
     color: theme.colors.textPrimary,

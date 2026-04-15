@@ -13,6 +13,7 @@ import { backendLimits, isValidEmail } from '@/utils/validation';
 import { AuthStackParamList } from '@/navigation/types';
 import { UserRole } from '@/types/auth';
 import { en } from '@/i18n/en';
+import { BrandMark } from '@/components/BrandMark';
 
 const t = en;
 
@@ -101,6 +102,7 @@ export function RegisterScreen({ navigation }: Props) {
   return (
     <ScreenContainer scrollable>
       <View style={styles.header}>
+        <BrandMark size="md" />
         <Text style={styles.title}>{t.register.title}</Text>
         <Text style={styles.subtitle}>{t.register.subtitle}</Text>
       </View>
