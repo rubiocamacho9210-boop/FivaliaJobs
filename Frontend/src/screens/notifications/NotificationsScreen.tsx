@@ -59,7 +59,7 @@ export function NotificationsScreen() {
 
   if (notificationsQuery.isLoading) {
     return (
-      <ScreenContainer>
+      <ScreenContainer showWatermark={false}>
         <LoadingState />
       </ScreenContainer>
     );
@@ -67,14 +67,14 @@ export function NotificationsScreen() {
 
   if (notificationsQuery.isError) {
     return (
-      <ScreenContainer>
+      <ScreenContainer showWatermark={false}>
         <ErrorState message={t.errors.generic} onRetry={notificationsQuery.refetch} />
       </ScreenContainer>
     );
   }
 
   return (
-    <ScreenContainer>
+    <ScreenContainer showWatermark={false}>
       <Text style={[styles.title, { color: colors.textPrimary }]}>{t.notifications.title}</Text>
 
       {!notificationsQuery.data || notificationsQuery.data.length === 0 ? (

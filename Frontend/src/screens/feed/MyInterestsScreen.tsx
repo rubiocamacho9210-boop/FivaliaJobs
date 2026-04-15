@@ -18,7 +18,7 @@ export function MyInterestsScreen() {
   const { t } = useI18n();
 
   return (
-    <ScreenContainer>
+    <ScreenContainer showWatermark={false}>
       <Text style={styles.title}>{t.interests.title}</Text>
       <Text style={styles.subtitle}>{t.interests.subtitle}</Text>
 

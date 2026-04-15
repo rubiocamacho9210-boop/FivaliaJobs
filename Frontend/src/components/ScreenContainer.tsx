@@ -12,9 +12,10 @@ import { BrandMark } from '@/components/BrandMark';
 
 type Props = PropsWithChildren<{
   scrollable?: boolean;
+  showWatermark?: boolean;
 }>;
 
-export function ScreenContainer({ children, scrollable = false }: Props) {
+export function ScreenContainer({ children, scrollable = false, showWatermark = true }: Props) {
   const { colors, spacing } = useTheme();
 
   const content = scrollable ? (
@@ -33,9 +34,11 @@ export function ScreenContainer({ children, scrollable = false }: Props) {
       >
         {content}
       </KeyboardAvoidingView>
-      <View style={styles.watermark} pointerEvents="none">
-        <BrandMark size="sm" />
-      </View>
+      {showWatermark && (
+        <View style={styles.watermark} pointerEvents="none">
+          <BrandMark size="sm" />
+        </View>
+      )}
     </SafeAreaView>
   );
 }
