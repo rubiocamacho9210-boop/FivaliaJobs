@@ -4,6 +4,8 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 import { Request, Response, NextFunction } from 'express';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import * as path from 'path';
 import { AppModule } from './app.module';
 import { PrismaExceptionFilter } from './prisma/prisma-exception.filter';
 import { GlobalExceptionFilter } from './filters/global-exception.filter';
@@ -30,7 +32,8 @@ function httpsRedirectMiddleware(req: Request, res: Response, next: NextFunction
 
 async function bootstrap() {
   validateRequiredEnv();
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.useStaticAssets(path.join(process.cwd(), 'uploads'), { prefix: '/uploads' });
 
   if (process.env.NODE_ENV === 'production') {
     app.use(httpsRedirectMiddleware);

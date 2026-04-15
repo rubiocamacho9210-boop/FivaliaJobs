@@ -7,6 +7,7 @@ import { LoadingState } from '@/components/LoadingState';
 import { PhotoUpload } from '@/components/PhotoUpload';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { useMyProfileQuery, useUpdateProfileMutation } from '@/hooks/useProfile';
+import { uploadPhoto } from '@/services/api/profileApi';
 import { AppStackParamList } from '@/navigation/types';
 import { getApiErrorMessage } from '@/utils/error';
 import { backendLimits } from '@/utils/validation';
@@ -58,12 +59,17 @@ export function ProfileSetupScreen({ route, navigation }: Props) {
     }
 
     try {
+      let resolvedPhotoUrl = photoUrl;
+      if (photoUrl && !photoUrl.startsWith('http')) {
+        resolvedPhotoUrl = await uploadPhoto(photoUrl);
+      }
+
       await updateMutation.mutateAsync({
         bio: bio.trim() || undefined,
         category: category.trim() || undefined,
         location: location.trim() || undefined,
         contact: contact.trim() || undefined,
-        photoUrl: photoUrl ?? undefined,
+        photoUrl: resolvedPhotoUrl ?? undefined,
       });
       if (mode === 'create') {
         navigation.replace('MainTabs', { screen: 'Feed' });
