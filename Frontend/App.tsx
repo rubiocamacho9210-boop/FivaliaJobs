@@ -4,6 +4,7 @@ import { NavigationContainer, Theme } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RootNavigator } from '@/navigation/RootNavigator';
 import { ThemeProvider, useTheme } from '@/context/ThemeContext';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 function AppNavigator() {
   const { colors, isDark } = useTheme();
@@ -45,10 +46,12 @@ export default function App() {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AppNavigator />
-      </ThemeProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <AppNavigator />
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }

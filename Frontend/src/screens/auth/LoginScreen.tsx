@@ -9,7 +9,9 @@ import { useLoginMutation } from '@/hooks/useAuthMutations';
 import { getApiErrorMessage } from '@/utils/error';
 import { isValidEmail } from '@/utils/validation';
 import { AuthStackParamList } from '@/navigation/types';
-import { useI18n } from '@/i18n';
+import { en } from '@/i18n/en';
+
+const t = en;
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
@@ -18,7 +20,6 @@ export function LoginScreen({ navigation }: Props) {
   const [password, setPassword] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
   const loginMutation = useLoginMutation();
-  const { t } = useI18n();
 
   const onSubmit = async () => {
     setFormError(null);

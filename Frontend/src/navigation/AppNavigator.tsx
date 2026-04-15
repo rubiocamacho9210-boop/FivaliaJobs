@@ -18,6 +18,7 @@ import { VerifyEmailScreen } from '@/screens/profile/VerifyEmailScreen';
 import { MyFollowersScreen } from '@/screens/feed/MyFollowersScreen';
 import { MyFollowingScreen } from '@/screens/feed/MyFollowingScreen';
 import { MyFavoritesScreen } from '@/screens/feed/MyFavoritesScreen';
+import { WriteReviewScreen } from '@/screens/reviews/WriteReviewScreen';
 
 const Tab = createBottomTabNavigator<AppTabParamList>();
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -105,6 +106,11 @@ export function AppNavigator({ forceProfileSetup = false }: Props) {
         name="MyFavorites"
         component={MyFavoritesScreen}
         options={{ title: t.favorites.title }}
+      />
+      <Stack.Screen
+        name="WriteReview"
+        component={WriteReviewScreen}
+        options={{ title: t.reviews.writeReview }}
       />
     </Stack.Navigator>
   );

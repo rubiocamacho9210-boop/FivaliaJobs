@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createPost, getPostById, getPosts, getPostsByUserId } from '@/services/api/postsApi';
+import { createPost, getPostById, getPosts, getPostsByUserId, updatePostStatus } from '@/services/api/postsApi';
 import { queryKeys } from '@/hooks/queryKeys';
 import { CreatePostRequest, PostType } from '@/types/post';
 
@@ -39,6 +39,18 @@ export function useCreatePostMutation() {
     mutationFn: (payload: CreatePostRequest) => createPost(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.posts });
+    },
+  });
+}
+
+export function useUpdatePostStatusMutation(postId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (status: 'ACTIVE' | 'CLOSED') => updatePostStatus(postId, status),
+    onSuccess: (updated) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.postDetail(postId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.posts });
+      queryClient.invalidateQueries({ queryKey: queryKeys.postsByUser(updated.userId) });
     },
   });
 }
