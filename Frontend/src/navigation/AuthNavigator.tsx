@@ -17,8 +17,8 @@ export function AuthNavigator() {
         contentStyle: { backgroundColor: theme.colors.background },
       }}
     >
-      <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'Iniciar sesion' }} />
-      <Stack.Screen name="Register" component={RegisterScreen} options={{ title: 'Crear cuenta' }} />
+      <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'Login' }} />
+      <Stack.Screen name="Register" component={RegisterScreen} options={{ title: 'Create account' }} />
     </Stack.Navigator>
   );
 }

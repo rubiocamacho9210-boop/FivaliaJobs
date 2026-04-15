@@ -12,7 +12,9 @@ import { getApiErrorMessage } from '@/utils/error';
 import { backendLimits, isValidEmail } from '@/utils/validation';
 import { AuthStackParamList } from '@/navigation/types';
 import { UserRole } from '@/types/auth';
-import { useI18n } from '@/i18n';
+import { en } from '@/i18n/en';
+
+const t = en;
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Register'>;
 
@@ -26,7 +28,6 @@ export function RegisterScreen({ navigation }: Props) {
   const setNeedsProfileSetup = useAuthStore((state) => state.setNeedsProfileSetup);
   const registerMutation = useRegisterMutation();
   const loginMutation = useLoginMutation();
-  const { t } = useI18n();
 
   const submitLabel = useMemo(
     () => (role === 'WORKER' ? t.register.workerAccount : t.register.clientAccount),
