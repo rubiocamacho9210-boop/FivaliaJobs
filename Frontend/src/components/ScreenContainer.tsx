@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import { useTheme } from '@/context/ThemeContext';
+import { BrandMark } from '@/components/BrandMark';
 
 type Props = PropsWithChildren<{
   scrollable?: boolean;
@@ -32,6 +33,9 @@ export function ScreenContainer({ children, scrollable = false }: Props) {
       >
         {content}
       </KeyboardAvoidingView>
+      <View style={styles.watermark} pointerEvents="none">
+        <BrandMark size="sm" />
+      </View>
     </SafeAreaView>
   );
 }
@@ -48,5 +52,11 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
+  },
+  watermark: {
+    position: 'absolute',
+    top: 12,
+    right: 16,
+    opacity: 0.18,
   },
 });

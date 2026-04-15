@@ -10,7 +10,6 @@ import { getApiErrorMessage } from '@/utils/error';
 import { isValidEmail } from '@/utils/validation';
 import { AuthStackParamList } from '@/navigation/types';
 import { en } from '@/i18n/en';
-import { BrandMark } from '@/components/BrandMark';
 
 const t = en;
 
@@ -46,7 +45,6 @@ export function LoginScreen({ navigation }: Props) {
   return (
     <ScreenContainer scrollable>
       <View style={styles.header}>
-        <BrandMark size="lg" />
         <Text style={styles.title}>{t.auth.welcome}</Text>
         <Text style={styles.subtitle}>{t.auth.welcomeSubtitle}</Text>
       </View>
@@ -88,7 +86,6 @@ const styles = StyleSheet.create({
   header: {
     marginBottom: theme.spacing.xl,
     marginTop: theme.spacing.lg,
-    gap: 12,
   },
   title: {
     color: theme.colors.textPrimary,
