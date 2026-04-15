@@ -3,3 +3,9 @@ node_modules
 dist
 *.log
 .env
+*.tsbuildinfo
+
+# Temporary files (conflicts, backups)
+*\ 2.*
+*\ 3.*
+*\ 4.*
